@@ -123,8 +123,8 @@ var _hmt = _hmt || [];
   "keywords": [
     ""
   ],
-  "articleBody": "SMBMS代码审计 1. xss漏洞 先知社区-知识来源\n这个xss在head.jsp文件的标签里，获取了请求头的Referer参数在前端显示了 可以使用payload进行闭合操作，进行闭合操作\n\"\u003e 这个payload在应该经过过滤器的时候就被拦截，因为jsp的本质是servlet所以是经过后端的但是过滤器没有进行拦截。\n1.1 xss漏洞 在找xss漏洞的时候可以先查看回显处 找到了键与值 全局搜索这个键 找到了方法名和变量名 再看看这变量做了什么 关联了键与值的关系然后发送到billlist.jsp现在就找query这个方法的所属类然后请求这个模块就行了 在全局搜索下这个请求的方法 首先需要是GET，参数是method值是query 可以先构造payload了\n请求方式+路径+方法名+值+键+payload GET /网站根目录/jsp/bill.do?method=query\u0026queryProductName=\"\u003e 1.3 存储xss漏洞 先找到回显位置 再找到这个方法 可以看到提交，方式方法 在初始化了Bill()，并且把billcode设置成bill()私有的成员变量，而且是String类型可以输入数据 然后就是初始化数据库class然后添加数据。 BillServiceImpl()调用了dao层的BillDaoImpl()。启用了预编译的功能，现在需要确保这个smbms_bill表的billcode输入的不是int类型数据就可以进行xss注入了 输入的字符类型,但是只能输入长度是20的payload 漏洞复现 危害没多大就写出来图一乐吧。 因为payload长度的变化如果直接闭合标签的话就会长度不够导致失败，所以要找新的可以触发html事件的xss位置，全局搜索找到。 触发事件可以节省payload 然后寻找提交方。显然GET\\POST都行，反正都会调用doGET()。我建议使用网页提交因为参数很多，而且有缺少的参数就会报错。\nprotected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException { String method = req.getParameter(\"method\"); if(method != null \u0026\u0026 method.equals(\"query\")){ this.query(req,resp); }else if(method != null \u0026\u0026 method.equals(\"add\")){ this.add(req,resp); }else if(method != null \u0026\u0026 method.equals(\"view\")){ this.getBillById(req,resp,\"billview.jsp\"); }else if(method != null \u0026\u0026 method.equals(\"modify\")){ this.getBillById(req,resp,\"billmodify.jsp\"); }else if(method != null \u0026\u0026 method.equals(\"modifysave\")){ this.modify(req,resp); }else if(method != null \u0026\u0026 method.equals(\"delbill\")){ this.delBill(req,resp); }else if(method != null \u0026\u0026 method.equals(\"getproviderlist\")){ this.getProviderlist(req,resp); } } @Override protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException { doGet(req, resp); } \"\"+onclick=alert(1)\u003e 2、密码重置漏洞 分析下修改密码的方法 注意三个点，第一是通过session来判断用户的，第二数据包里收一个值newpassword，第三newpassword不为空就可以影响flag的判断并影响最结果。 显然如果是修改自己的密码就太鸡肋了，可以看到数据包没有token，我们可以使用csrf提升危害。 guozhi 知识星球 ",
-  "wordCount" : "1056",
+  "articleBody": "SMBMS代码审计 1. xss漏洞 先知社区-知识来源\n这个xss在head.jsp文件的标签里，获取了请求头的Referer参数在前端显示了 可以使用payload进行闭合操作，进行闭合操作\n\"\u003e 这个payload在应该经过过滤器的时候就被拦截，因为jsp的本质是servlet所以是经过后端的但是过滤器没有进行拦截。\n1.1 xss漏洞 在找xss漏洞的时候可以先查看回显处 找到了键与值 全局搜索这个键 找到了方法名和变量名 再看看这变量做了什么 关联了键与值的关系然后发送到billlist.jsp现在就找query这个方法的所属类然后请求这个模块就行了 在全局搜索下这个请求的方法 首先需要是GET，参数是method值是query 可以先构造payload了\n请求方式+路径+方法名+值+键+payload GET /网站根目录/jsp/bill.do?method=query\u0026queryProductName=\"\u003e 1.3 存储xss漏洞 先找到回显位置 再找到这个方法 可以看到提交，方式方法 在初始化了Bill()，并且把billcode设置成bill()私有的成员变量，而且是String类型可以输入数据 然后就是初始化数据库class然后添加数据。 BillServiceImpl()调用了dao层的BillDaoImpl()。启用了预编译的功能，现在需要确保这个smbms_bill表的billcode输入的不是int类型数据就可以进行xss注入了 输入的字符类型,但是只能输入长度是20的payload 漏洞复现 危害没多大就写出来图一乐吧。 因为payload长度的变化如果直接闭合标签的话就会长度不够导致失败，所以要找新的可以触发html事件的xss位置，全局搜索找到。 触发事件可以节省payload 然后寻找提交方。显然GET\\POST都行，反正都会调用doGET()。我建议使用网页提交因为参数很多，而且有缺少的参数就会报错。\nprotected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException { String method = req.getParameter(\"method\"); if(method != null \u0026\u0026 method.equals(\"query\")){ this.query(req,resp); }else if(method != null \u0026\u0026 method.equals(\"add\")){ this.add(req,resp); }else if(method != null \u0026\u0026 method.equals(\"view\")){ this.getBillById(req,resp,\"billview.jsp\"); }else if(method != null \u0026\u0026 method.equals(\"modify\")){ this.getBillById(req,resp,\"billmodify.jsp\"); }else if(method != null \u0026\u0026 method.equals(\"modifysave\")){ this.modify(req,resp); }else if(method != null \u0026\u0026 method.equals(\"delbill\")){ this.delBill(req,resp); }else if(method != null \u0026\u0026 method.equals(\"getproviderlist\")){ this.getProviderlist(req,resp); } } @Override protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException { doGet(req, resp); } \"\"+onclick=alert(1)\u003e 2、密码重置漏洞 分析下修改密码的方法 注意三个点，第一是通过session来判断用户的，第二数据包里收一个值newpassword，第三newpassword不为空就可以影响flag的判断并影响最结果。 显然如果是修改自己的密码就太鸡肋了，可以看到数据包没有token，我们可以使用csrf提升危害。 知识星球 ",
+  "wordCount" : "1055",
   "inLanguage": "en",
   "datePublished": "2023-05-14T16:56:09+08:00",
   "dateModified": "2023-05-14T16:56:09+08:00",
@@ -289,7 +289,7 @@ var _hmt = _hmt || [];
     
     <span id="post_meta_style_3">
         <span class="fa fa-file-word-o"></span>
-        <span>1056字
+        <span>1055字
             &nbsp;&nbsp;
         </span>
     </span>
@@ -390,7 +390,7 @@ var _hmt = _hmt || [];
                     <a href="#2%e5%af%86%e7%a0%81%e9%87%8d%e7%bd%ae%e6%bc%8f%e6%b4%9e" aria-label="2、密码重置漏洞">2、密码重置漏洞</a></li></ul>
                     
                 <li>
-                    <a href="#guozhi" aria-label="guozhi">guozhi</a>
+                    <a href="#%e7%9f%a5%e8%af%86%e6%98%9f%e7%90%83" aria-label="知识星球"><strong>知识星球</strong></a>
                 </li>
             </ul>
             </li>
@@ -561,9 +561,9 @@ var _hmt = _hmt || [];
 
 <img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230516172233.png" alt=""  />
 </p>
-<h2 id="guozhi">guozhi<a hidden class="anchor" aria-hidden="true" href="#guozhi">#</a></h2>
-<p><em>知识星球</em>
-<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/%E7%9F%A5%E8%AF%86%E6%98%9F%E7%90%83%E5%85%A5%E5%8F%A3.png" alt=""  />
+<hr>
+<h2 id="知识星球"><strong>知识星球</strong><a hidden class="anchor" aria-hidden="true" href="#知识星球">#</a></h2>
+<p><img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/%E7%9F%A5%E8%AF%86%E6%98%9F%E7%90%83%E5%85%A5%E5%8F%A3.png" alt=""  />
 </p>
 
 
