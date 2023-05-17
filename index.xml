@@ -1,19 +1,73 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Sulv&#39;s Blog</title>
+    <title>果汁天下苏&#39;s Blog</title>
     <link>http://guozhi1.github.io/</link>
-    <description>Recent content on Sulv&#39;s Blog</description>
+    <description>Recent content on 果汁天下苏&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 21 Feb 2023 12:20:21 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 14 May 2023 16:56:09 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Tech1</title>
-      <link>http://guozhi1.github.io/posts/tech/tech1/</link>
-      <pubDate>Tue, 21 Feb 2023 12:20:21 +0800</pubDate>
+      <title>Java代码审计smbms</title>
+      <link>http://guozhi1.github.io/posts/tech/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1smbms/</link>
+      <pubDate>Sun, 14 May 2023 16:56:09 +0800</pubDate>
       
-      <guid>http://guozhi1.github.io/posts/tech/tech1/</guid>
-      <description></description>
+      <guid>http://guozhi1.github.io/posts/tech/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1smbms/</guid>
+      <description>SMBMS代码审计 1. xss漏洞 先知社区-知识来源 这个xss在head.jsp文件的标签里，获取了请求头的Referer参数在前端显示了 可以使用payload进行闭合操作，进行闭合操作 &amp;#34;&amp;gt;&amp;lt;img src=x onerror=alert(1)&amp;gt; 这个payload在应该经过过滤器的时候就被拦截，因为jsp的本质是servlet所以是经过</description>
+    </item>
+    
+    <item>
+      <title>Src挖掘 Xss漏洞</title>
+      <link>http://guozhi1.github.io/posts/tech/src%E6%8C%96%E6%8E%98-xss%E6%BC%8F%E6%B4%9E/</link>
+      <pubDate>Tue, 09 May 2023 08:35:41 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/src%E6%8C%96%E6%8E%98-xss%E6%BC%8F%E6%B4%9E/</guid>
+      <description>src挖掘-xss漏洞 漏洞点：url跳转参数，登录url跳转， 退出 注意点：注意url参数 redirect URL redirect_url等参数 前端302跳转可造成xss漏洞window.location 正常的url:https://guozhi1.github.io/login?url=http:/</description>
+    </item>
+    
+    <item>
+      <title>Src挖掘 短信邮箱轰炸</title>
+      <link>http://guozhi1.github.io/posts/tech/src%E6%8C%96%E6%8E%98-%E7%9F%AD%E4%BF%A1%E9%82%AE%E7%AE%B1%E8%BD%B0%E7%82%B8/</link>
+      <pubDate>Tue, 09 May 2023 08:14:15 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/src%E6%8C%96%E6%8E%98-%E7%9F%AD%E4%BF%A1%E9%82%AE%E7%AE%B1%E8%BD%B0%E7%82%B8/</guid>
+      <description>src挖掘-短信邮箱轰炸 漏洞点：有手机号， 邮箱发送东西的地方 有的轰炸只有前端限制，可以通过burp抓包进行重发测试 有些会有后端的时间限制如后端10秒，前端60秒，我们只需要关注后端10秒时间一到立马发包 并发轰炸在一定时间内，发送数据包可以被服务器受理，只要在这个时间内多次发包就可</description>
+    </item>
+    
+    <item>
+      <title>Src挖掘 Pdf导出导致的ssrf漏洞</title>
+      <link>http://guozhi1.github.io/posts/tech/src%E6%8C%96%E6%8E%98-pdf%E5%AF%BC%E5%87%BA%E5%AF%BC%E8%87%B4%E7%9A%84ssrf%E6%BC%8F%E6%B4%9E/</link>
+      <pubDate>Tue, 09 May 2023 07:33:40 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/src%E6%8C%96%E6%8E%98-pdf%E5%AF%BC%E5%87%BA%E5%AF%BC%E8%87%B4%E7%9A%84ssrf%E6%BC%8F%E6%B4%9E/</guid>
+      <description>src挖掘-pdf导出导致的ssrf 漏洞点：pdf导出 在测试pdf导出导致的ssrf有两个方法 burp抓包进行插入标签 通过js断点调试控制台使用插入 变量=变量.replaceAll(&amp;#34;被替换的值&amp;#34;， &amp;#34;&amp;lt;iframe src=&amp;#34;http://dnslog&amp;#34;&amp;gt;&amp;#34;); 如果是全回显就会返回对应的网址，不是全回显需要注意网页延迟或者</description>
+    </item>
+    
+    <item>
+      <title>32位逆向技术</title>
+      <link>http://guozhi1.github.io/posts/tech/32%E4%BD%8D%E9%80%86%E5%90%91%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Sat, 15 Apr 2023 15:02:44 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/32%E4%BD%8D%E9%80%86%E5%90%91%E6%8A%80%E6%9C%AF/</guid>
+      <description>前言 知识来源：《加密与解密》 第一章启动函数 Windows程序在按顺序执行时不是直接从WinMain函数开始的,而是执行别的函数进行初始化,之后调用WinMain函数 （选择WinMain,交叉引用就可以找到上一级） 第二章函数 1. 识别函数 编译器都会使用call与ret指令来进行函数的调</description>
+    </item>
+    
+    <item>
+      <title>逆向基础-调用约定</title>
+      <link>http://guozhi1.github.io/posts/tech/%E9%80%86%E5%90%91%E5%9F%BA%E7%A1%80/</link>
+      <pubDate>Tue, 11 Apr 2023 12:08:52 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/%E9%80%86%E5%90%91%E5%9F%BA%E7%A1%80/</guid>
+      <description>调用约定 知识来源 允许使用VARARG：表示参数个数可以是不确定 约定类型 _cdecl(C类规范) pascal stdcall Fastcall 参数传递 从右到左 从左到右 从右到左 寄存器传参与栈 平衡者 调用者 子程序 子程序 子程序 允许使用VARARG 是 否 否 x86 下的调用约定 _cdecl,_stdcall,_fastcall int Test(int a,int b,int c,int d,int e) { return a + b + c + d + e; } int main() { Test(1,2,3,4,5); } _cdecl C++下的默</description>
+    </item>
+    
+    <item>
+      <title>文本类型免杀</title>
+      <link>http://guozhi1.github.io/posts/tech/%E6%96%87%E6%9C%AC%E7%B1%BB%E5%9E%8B%E5%85%8D%E6%9D%80/</link>
+      <pubDate>Tue, 11 Apr 2023 10:41:37 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/%E6%96%87%E6%9C%AC%E7%B1%BB%E5%9E%8B%E5%85%8D%E6%9D%80/</guid>
+      <description>AMSI 一个反病毒接口，分析恶意代码。 位置是在C:\windows\system32\amsi.dll 安全厂商也可以通过接入Amsi进行查杀提高安全性 接入Amsi的相关厂商 AMSI的处理流程是：扫描&amp;mdash;-触发&amp;mdash;-病毒库 ASMI绕过方式 不进行绕过，的显示 PS C:\Users\32569&amp;gt; amsiutils 所在位</description>
     </item>
     
     <item>
@@ -44,21 +98,12 @@
     </item>
     
     <item>
-      <title>Tech</title>
-      <link>http://guozhi1.github.io/posts/tech/tech/</link>
-      <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
-      
-      <guid>http://guozhi1.github.io/posts/tech/tech/</guid>
-      <description>科技代码</description>
-    </item>
-    
-    <item>
       <title>🤝友链</title>
       <link>http://guozhi1.github.io/links/</link>
       <pubDate>Sat, 06 Nov 2021 15:15:53 +0800</pubDate>
       
       <guid>http://guozhi1.github.io/links/</guid>
-      <description>Sulv&amp;#39;s Blog 一个记录技术、阅读、生活的博客 👉友链格式 名称： Sulv&amp;rsquo;s Blog 网址： https://www.sulvblog.cn 图标： https://www.sulvblog.cn/img/Q.gif 描述： 一个记录技术、阅读、生活的博客 👉友链申请要求 秉承互换友链原则、文章定期更新、不能有太多广告、个人描述字数控制在15字内 👉Hugo博客交流群 787018782</description>
+      <description>Sulv&amp;#39;s Blog 一个记录技术、阅读、生活的博客(源码来源大佬) 小白工具箱chargpt 非常好用的工具站 知识星球（免费） 做网络安全知识汇总 小白工具箱github镜像 非常好用的工具站 棱角安全社区 非常好用的工具站 👉友链格式 名称： Sulv&amp;rsquo;s Blog 网址： https://www.sulvblog.cn 图标： https://www.sulvblog.cn/img/Q.gif 描述： 一个记录技术、阅读、生活的博客 👉友链申请要求</description>
     </item>
     
     <item>

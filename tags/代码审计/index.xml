@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>代码审计 on 果汁天下苏&#39;s Blog</title>
+    <link>http://guozhi1.github.io/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</link>
+    <description>Recent content in 代码审计 on 果汁天下苏&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 14 May 2023 16:56:09 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Java代码审计smbms</title>
+      <link>http://guozhi1.github.io/posts/tech/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1smbms/</link>
+      <pubDate>Sun, 14 May 2023 16:56:09 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1smbms/</guid>
+      <description>SMBMS代码审计 1. xss漏洞 先知社区-知识来源 这个xss在head.jsp文件的标签里，获取了请求头的Referer参数在前端显示了 可以使用payload进行闭合操作，进行闭合操作 &amp;#34;&amp;gt;&amp;lt;img src=x onerror=alert(1)&amp;gt; 这个payload在应该经过过滤器的时候就被拦截，因为jsp的本质是servlet所以是经过</description>
+    </item>
+    
+  </channel>
+</rss>
