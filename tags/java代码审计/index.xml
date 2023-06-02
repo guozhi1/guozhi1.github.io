@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>java代码审计 on 果汁天下苏&#39;s Blog</title>
+    <link>http://guozhi1.github.io/tags/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</link>
+    <description>Recent content in java代码审计 on 果汁天下苏&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 22 May 2023 15:54:16 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/tags/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Oasys代码审计</title>
+      <link>http://guozhi1.github.io/posts/tech/oasys%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</link>
+      <pubDate>Mon, 22 May 2023 15:54:16 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/oasys%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</guid>
+      <description>OAsys代码审计 知识来源 1. sql注入 全局搜索可以注入的地方${可以找到sql注入的地方。#{}是预编译不可以进行注入的。 做了一个简单的判断然后进行拼接操作。 这个语句的id是sortMyNotice（我没截进去） 然后在这个所属的类 在cn.gson.oasys.mappers这个包</description>
+    </item>
+    
+  </channel>
+</rss>
