@@ -6,7 +6,25 @@
     <description>Recent content on 果汁天下苏&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 22 May 2023 15:54:16 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 29 Jun 2023 15:25:38 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>键盘HOOK学习以及逆向</title>
+      <link>http://guozhi1.github.io/posts/tech/hook%E5%AD%A6%E4%B9%A0%E4%BB%A5%E5%8F%8A%E9%80%86%E5%90%91/</link>
+      <pubDate>Thu, 29 Jun 2023 15:25:38 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/hook%E5%AD%A6%E4%B9%A0%E4%BB%A5%E5%8F%8A%E9%80%86%E5%90%91/</guid>
+      <description>一、WidnowsHOOK分类 系统钩子（System Hooks）：系统钩子是最常见的一类钩子，用于监视和修改系统级别的事件。系统钩子可以捕获和处理各种系统事件，如键盘输入、鼠标消息、窗口消息等。系统钩子可以全局范围内生效，可以对整个系统中的事件进行拦截和处理。 应用程序钩子（App</description>
+    </item>
+    
+    <item>
+      <title>Src未授权访问挖掘</title>
+      <link>http://guozhi1.github.io/posts/tech/src%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%8C%96%E6%8E%98/</link>
+      <pubDate>Fri, 02 Jun 2023 17:48:15 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/src%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%8C%96%E6%8E%98/</guid>
+      <description>可以正常使用的功能点截取数据包，删除cookie看对业务是否能正常处理，如果处理就是未授权。 可以f12查看前端页面是否存在未授权的API接口 修改返回包</description>
+    </item>
+    
     <item>
       <title>Oasys代码审计</title>
       <link>http://guozhi1.github.io/posts/tech/oasys%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</link>
