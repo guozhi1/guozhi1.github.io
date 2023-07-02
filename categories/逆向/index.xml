@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>逆向 on 果汁天下苏&#39;s Blog</title>
+    <link>http://guozhi1.github.io/categories/%E9%80%86%E5%90%91/</link>
+    <description>Recent content in 逆向 on 果汁天下苏&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 25 May 2023 07:47:04 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/categories/%E9%80%86%E5%90%91/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>X64逆向技术 笔记</title>
+      <link>http://guozhi1.github.io/posts/tech/x64%E9%80%86%E5%90%91%E6%8A%80%E6%9C%AF-%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Thu, 25 May 2023 07:47:04 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/x64%E9%80%86%E5%90%91%E6%8A%80%E6%9C%AF-%E7%AC%94%E8%AE%B0/</guid>
+      <description>x64逆向技术 1.寻找main函数 x64中寻找main函数可以通过IDA获取mian函数的符号文件，或者找到exit函数函数上一个call就是main函数 2. 参数的传递 x64不用遵守x32那么多的调用约定，x64只有一个调用约定。 x64中传递参数前4个参数会由寄存器进行传递分别是r</description>
+    </item>
+    
+  </channel>
+</rss>
