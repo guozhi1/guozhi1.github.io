@@ -525,63 +525,63 @@ var _hmt = _hmt || [];
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span>(x<span style="color:#f92672">+</span>y);
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>int Add(int x, int y);
-</span></span><span style="display:flex;"><span>void main()
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>003517A0  push        ebp  
-</span></span><span style="display:flex;"><span>003517A1  mov         ebp,esp  
-</span></span><span style="display:flex;"><span>003517A3  sub         esp,0D8h  
-</span></span><span style="display:flex;"><span>003517A9  push        ebx  
-</span></span><span style="display:flex;"><span>003517AA  push        esi  
-</span></span><span style="display:flex;"><span>003517AB  push        edi  
-</span></span><span style="display:flex;"><span>003517AC  lea         edi,[ebp-18h]  
-</span></span><span style="display:flex;"><span>003517AF  mov         ecx,6  
-</span></span><span style="display:flex;"><span>003517B4  mov         eax,0CCCCCCCCh  
-</span></span><span style="display:flex;"><span>003517B9  rep stos    dword ptr es:[edi]  
-</span></span><span style="display:flex;"><span>003517BB  mov         ecx,offset _99047FA2_源@cpp (035C000h)  
-</span></span><span style="display:flex;"><span>003517C0  call        @__CheckForDebuggerJustMyCode@4 (035130Ch)  
-</span></span><span style="display:flex;"><span>	int a = 5, b = 6;
-</span></span><span style="display:flex;"><span>003517C5  mov         dword ptr [a],5  
-</span></span><span style="display:flex;"><span>003517CC  mov         dword ptr [b],6  
-</span></span><span style="display:flex;"><span>	Add(a,b);
-</span></span><span style="display:flex;"><span>003517D3  mov         eax,dword ptr [b]  
-</span></span><span style="display:flex;"><span>003517D6  push        eax  
-</span></span><span style="display:flex;"><span>003517D7  mov         ecx,dword ptr [a]  
-</span></span><span style="display:flex;"><span>003517DA  push        ecx  
-</span></span><span style="display:flex;"><span>003517DB  call        Add (03511B3h)  //函数的开始
-</span></span><span style="display:flex;"><span>003517E0  add         esp,8  
-</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#a6e22e">int</span> <span style="color:#66d9ef">Add</span>(<span style="color:#66d9ef">int</span> <span style="color:#66d9ef">x</span>, <span style="color:#66d9ef">int</span> <span style="color:#66d9ef">y</span>)<span style="color:#75715e">;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">void</span> <span style="color:#66d9ef">main</span>()
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">003517</span><span style="color:#a6e22e">A0</span>  <span style="color:#66d9ef">push</span>        <span style="color:#66d9ef">ebp</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">003517</span><span style="color:#66d9ef">A1</span>  <span style="color:#66d9ef">mov</span>         <span style="color:#66d9ef">ebp</span>,<span style="color:#66d9ef">esp</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">003517</span><span style="color:#66d9ef">A3</span>  <span style="color:#66d9ef">sub</span>         <span style="color:#66d9ef">esp</span>,<span style="color:#ae81ff">0</span><span style="color:#66d9ef">D8h</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">003517</span><span style="color:#66d9ef">A9</span>  <span style="color:#66d9ef">push</span>        <span style="color:#66d9ef">ebx</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">003517</span><span style="color:#66d9ef">AA</span>  <span style="color:#66d9ef">push</span>        <span style="color:#66d9ef">esi</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">003517</span><span style="color:#66d9ef">AB</span>  <span style="color:#66d9ef">push</span>        <span style="color:#66d9ef">edi</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">003517</span><span style="color:#66d9ef">AC</span>  <span style="color:#66d9ef">lea</span>         <span style="color:#66d9ef">edi</span>,[<span style="color:#66d9ef">ebp-18h</span>]  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">003517</span><span style="color:#66d9ef">AF</span>  <span style="color:#66d9ef">mov</span>         <span style="color:#66d9ef">ecx</span>,<span style="color:#ae81ff">6</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">003517</span><span style="color:#66d9ef">B4</span>  <span style="color:#66d9ef">mov</span>         <span style="color:#66d9ef">eax</span>,<span style="color:#ae81ff">0</span><span style="color:#66d9ef">CCCCCCCCh</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">003517</span><span style="color:#66d9ef">B9</span>  <span style="color:#66d9ef">rep</span> <span style="color:#66d9ef">stos</span>    <span style="color:#66d9ef">dword</span> <span style="color:#66d9ef">ptr</span> <span style="color:#66d9ef">es</span>:[<span style="color:#66d9ef">edi</span>]  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">003517</span><span style="color:#66d9ef">BB</span>  <span style="color:#66d9ef">mov</span>         <span style="color:#66d9ef">ecx</span>,<span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">_99047FA2_</span><span style="color:#960050;background-color:#1e0010">源@</span><span style="color:#66d9ef">cpp</span> (<span style="color:#ae81ff">035</span><span style="color:#66d9ef">C000h</span>)  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">003517</span><span style="color:#66d9ef">C0</span>  <span style="color:#66d9ef">call</span>        <span style="color:#960050;background-color:#1e0010">@</span><span style="color:#66d9ef">__CheckForDebuggerJustMyCode@4</span> (<span style="color:#ae81ff">035130</span><span style="color:#66d9ef">Ch</span>)  
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> <span style="color:#66d9ef">a</span> <span style="color:#960050;background-color:#1e0010">=</span> <span style="color:#ae81ff">5</span>, <span style="color:#66d9ef">b</span> <span style="color:#960050;background-color:#1e0010">=</span> <span style="color:#ae81ff">6</span><span style="color:#75715e">;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">003517</span><span style="color:#a6e22e">C5</span>  <span style="color:#66d9ef">mov</span>         <span style="color:#66d9ef">dword</span> <span style="color:#66d9ef">ptr</span> [<span style="color:#66d9ef">a</span>],<span style="color:#ae81ff">5</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">003517</span><span style="color:#66d9ef">CC</span>  <span style="color:#66d9ef">mov</span>         <span style="color:#66d9ef">dword</span> <span style="color:#66d9ef">ptr</span> [<span style="color:#66d9ef">b</span>],<span style="color:#ae81ff">6</span>  
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">Add</span>(<span style="color:#66d9ef">a</span>,<span style="color:#66d9ef">b</span>)<span style="color:#75715e">;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">003517</span><span style="color:#a6e22e">D3</span>  <span style="color:#66d9ef">mov</span>         <span style="color:#66d9ef">eax</span>,<span style="color:#66d9ef">dword</span> <span style="color:#66d9ef">ptr</span> [<span style="color:#66d9ef">b</span>]  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">003517</span><span style="color:#66d9ef">D6</span>  <span style="color:#66d9ef">push</span>        <span style="color:#66d9ef">eax</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">003517</span><span style="color:#66d9ef">D7</span>  <span style="color:#66d9ef">mov</span>         <span style="color:#66d9ef">ecx</span>,<span style="color:#66d9ef">dword</span> <span style="color:#66d9ef">ptr</span> [<span style="color:#66d9ef">a</span>]  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">003517</span><span style="color:#66d9ef">DA</span>  <span style="color:#66d9ef">push</span>        <span style="color:#66d9ef">ecx</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">003517</span><span style="color:#66d9ef">DB</span>  <span style="color:#66d9ef">call</span>        <span style="color:#66d9ef">Add</span> (<span style="color:#ae81ff">03511</span><span style="color:#66d9ef">B3h</span>)  <span style="color:#75715e">//函数的开始
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">003517</span><span style="color:#a6e22e">E0</span>  <span style="color:#66d9ef">add</span>         <span style="color:#66d9ef">esp</span>,<span style="color:#ae81ff">8</span>  
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">}</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>int Add(int x, int y)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>00351740  push        ebp  
-</span></span><span style="display:flex;"><span>00351741  mov         ebp,esp  
-</span></span><span style="display:flex;"><span>00351743  sub         esp,0C0h  
-</span></span><span style="display:flex;"><span>00351749  push        ebx  
-</span></span><span style="display:flex;"><span>0035174A  push        esi  
-</span></span><span style="display:flex;"><span>0035174B  push        edi  
-</span></span><span style="display:flex;"><span>0035174C  mov         edi,ebp  
-</span></span><span style="display:flex;"><span>0035174E  xor         ecx,ecx  
-</span></span><span style="display:flex;"><span>00351750  mov         eax,0CCCCCCCCh  
-</span></span><span style="display:flex;"><span>00351755  rep stos    dword ptr es:[edi]  
-</span></span><span style="display:flex;"><span>00351757  mov         ecx,offset _99047FA2_源@cpp (035C000h)  
-</span></span><span style="display:flex;"><span>0035175C  call        @__CheckForDebuggerJustMyCode@4 (035130Ch)  
-</span></span><span style="display:flex;"><span>	return (x + y);
-</span></span><span style="display:flex;"><span>00351761  mov         eax,dword ptr [x]  
-</span></span><span style="display:flex;"><span>00351764  add         eax,dword ptr [y]  
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>00351767  pop         edi  
-</span></span><span style="display:flex;"><span>00351768  pop         esi  
-</span></span><span style="display:flex;"><span>00351769  pop         ebx  
-</span></span><span style="display:flex;"><span>0035176A  add         esp,0C0h  
-</span></span><span style="display:flex;"><span>00351770  cmp         ebp,esp  
-</span></span><span style="display:flex;"><span>00351772  call        __RTC_CheckEsp (0351235h)  
-</span></span><span style="display:flex;"><span>00351777  mov         esp,ebp  
-</span></span><span style="display:flex;"><span>00351779  pop         ebp  
-</span></span><span style="display:flex;"><span>0035177A  ret         //函数的结束
-</span></span></code></pre></div><h3 id="2-函数的参数">2. 函数的参数<a hidden class="anchor" aria-hidden="true" href="#2-函数的参数">#</a></h3>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">int</span> <span style="color:#66d9ef">Add</span>(<span style="color:#66d9ef">int</span> <span style="color:#66d9ef">x</span>, <span style="color:#66d9ef">int</span> <span style="color:#66d9ef">y</span>)
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">00351740</span>  <span style="color:#a6e22e">push</span>        <span style="color:#66d9ef">ebp</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00351741</span>  <span style="color:#66d9ef">mov</span>         <span style="color:#66d9ef">ebp</span>,<span style="color:#66d9ef">esp</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00351743</span>  <span style="color:#66d9ef">sub</span>         <span style="color:#66d9ef">esp</span>,<span style="color:#ae81ff">0</span><span style="color:#66d9ef">C0h</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00351749</span>  <span style="color:#66d9ef">push</span>        <span style="color:#66d9ef">ebx</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0035174</span><span style="color:#66d9ef">A</span>  <span style="color:#66d9ef">push</span>        <span style="color:#66d9ef">esi</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0035174</span><span style="color:#66d9ef">B</span>  <span style="color:#66d9ef">push</span>        <span style="color:#66d9ef">edi</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0035174</span><span style="color:#66d9ef">C</span>  <span style="color:#66d9ef">mov</span>         <span style="color:#66d9ef">edi</span>,<span style="color:#66d9ef">ebp</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0035174</span><span style="color:#66d9ef">E</span>  <span style="color:#66d9ef">xor</span>         <span style="color:#66d9ef">ecx</span>,<span style="color:#66d9ef">ecx</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00351750</span>  <span style="color:#66d9ef">mov</span>         <span style="color:#66d9ef">eax</span>,<span style="color:#ae81ff">0</span><span style="color:#66d9ef">CCCCCCCCh</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00351755</span>  <span style="color:#66d9ef">rep</span> <span style="color:#66d9ef">stos</span>    <span style="color:#66d9ef">dword</span> <span style="color:#66d9ef">ptr</span> <span style="color:#66d9ef">es</span>:[<span style="color:#66d9ef">edi</span>]  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00351757</span>  <span style="color:#66d9ef">mov</span>         <span style="color:#66d9ef">ecx</span>,<span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">_99047FA2_</span><span style="color:#960050;background-color:#1e0010">源@</span><span style="color:#66d9ef">cpp</span> (<span style="color:#ae81ff">035</span><span style="color:#66d9ef">C000h</span>)  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0035175</span><span style="color:#66d9ef">C</span>  <span style="color:#66d9ef">call</span>        <span style="color:#960050;background-color:#1e0010">@</span><span style="color:#66d9ef">__CheckForDebuggerJustMyCode@4</span> (<span style="color:#ae81ff">035130</span><span style="color:#66d9ef">Ch</span>)  
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> (<span style="color:#66d9ef">x</span> <span style="color:#960050;background-color:#1e0010">+</span> <span style="color:#66d9ef">y</span>)<span style="color:#75715e">;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">00351761</span>  <span style="color:#a6e22e">mov</span>         <span style="color:#66d9ef">eax</span>,<span style="color:#66d9ef">dword</span> <span style="color:#66d9ef">ptr</span> [<span style="color:#66d9ef">x</span>]  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00351764</span>  <span style="color:#66d9ef">add</span>         <span style="color:#66d9ef">eax</span>,<span style="color:#66d9ef">dword</span> <span style="color:#66d9ef">ptr</span> [<span style="color:#66d9ef">y</span>]  
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">00351767</span>  <span style="color:#a6e22e">pop</span>         <span style="color:#66d9ef">edi</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00351768</span>  <span style="color:#66d9ef">pop</span>         <span style="color:#66d9ef">esi</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00351769</span>  <span style="color:#66d9ef">pop</span>         <span style="color:#66d9ef">ebx</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0035176</span><span style="color:#66d9ef">A</span>  <span style="color:#66d9ef">add</span>         <span style="color:#66d9ef">esp</span>,<span style="color:#ae81ff">0</span><span style="color:#66d9ef">C0h</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00351770</span>  <span style="color:#66d9ef">cmp</span>         <span style="color:#66d9ef">ebp</span>,<span style="color:#66d9ef">esp</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00351772</span>  <span style="color:#66d9ef">call</span>        <span style="color:#66d9ef">__RTC_CheckEsp</span> (<span style="color:#ae81ff">0351235</span><span style="color:#66d9ef">h</span>)  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00351777</span>  <span style="color:#66d9ef">mov</span>         <span style="color:#66d9ef">esp</span>,<span style="color:#66d9ef">ebp</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00351779</span>  <span style="color:#66d9ef">pop</span>         <span style="color:#66d9ef">ebp</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0035177</span><span style="color:#66d9ef">A</span>  <span style="color:#66d9ef">ret</span>         <span style="color:#75715e">//函数的结束
+</span></span></span></code></pre></div><h3 id="2-函数的参数">2. 函数的参数<a hidden class="anchor" aria-hidden="true" href="#2-函数的参数">#</a></h3>
 <ul>
 <li>函数传参的三种方式，栈方式，寄存器方式，全局变量
 <ul>
@@ -629,19 +629,19 @@ Fastcall特点就快（因为寄存器传参的原因）<br>
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#f92672">*</span>a <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>b; <span style="color:#75715e">// 把*b的值赋值到*a位置
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>00B818D5  mov         ecx,offset _99047FA2_源@cpp (0B8C003h)  
-</span></span><span style="display:flex;"><span>00B818DA  call        @__CheckForDebuggerJustMyCode@4 (0B8131Bh)  
-</span></span><span style="display:flex;"><span>	int a = 5;
-</span></span><span style="display:flex;"><span>00B818DF  mov         dword ptr [a],5 //a赋值
-</span></span><span style="display:flex;"><span>	int b = 6;
-</span></span><span style="display:flex;"><span>00B818E6  mov         dword ptr [b],6 //b赋值
-</span></span><span style="display:flex;"><span>	max(&amp;a, &amp;b); //获取变量的内存地址 
-</span></span><span style="display:flex;"><span>00B818ED  lea         eax,[b]   //第二个参数 lea取的是地址
-</span></span><span style="display:flex;"><span>00B818F0  push        eax  
-</span></span><span style="display:flex;"><span>00B818F1  lea         ecx,[a]   //第一个参数 lea取的是地址
-</span></span><span style="display:flex;"><span>00B818F4  push        ecx  
-</span></span><span style="display:flex;"><span>00B818F5  call        max (0B81280h)  //调用 max 子程序
-</span></span><span style="display:flex;"><span>00B818FA  add         esp,8  （_cdecl）
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">00</span><span style="color:#a6e22e">B818D5</span>  <span style="color:#66d9ef">mov</span>         <span style="color:#66d9ef">ecx</span>,<span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">_99047FA2_</span><span style="color:#960050;background-color:#1e0010">源@</span><span style="color:#66d9ef">cpp</span> (<span style="color:#ae81ff">0</span><span style="color:#66d9ef">B8C003h</span>)  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00</span><span style="color:#66d9ef">B818DA</span>  <span style="color:#66d9ef">call</span>        <span style="color:#960050;background-color:#1e0010">@</span><span style="color:#66d9ef">__CheckForDebuggerJustMyCode@4</span> (<span style="color:#ae81ff">0</span><span style="color:#66d9ef">B8131Bh</span>)  
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> <span style="color:#66d9ef">a</span> <span style="color:#960050;background-color:#1e0010">=</span> <span style="color:#ae81ff">5</span><span style="color:#75715e">;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">00</span><span style="color:#a6e22e">B818DF</span>  <span style="color:#66d9ef">mov</span>         <span style="color:#66d9ef">dword</span> <span style="color:#66d9ef">ptr</span> [<span style="color:#66d9ef">a</span>],<span style="color:#ae81ff">5</span> <span style="color:#75715e">//a赋值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">int</span> <span style="color:#66d9ef">b</span> <span style="color:#960050;background-color:#1e0010">=</span> <span style="color:#ae81ff">6</span><span style="color:#75715e">;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">00</span><span style="color:#a6e22e">B818E6</span>  <span style="color:#66d9ef">mov</span>         <span style="color:#66d9ef">dword</span> <span style="color:#66d9ef">ptr</span> [<span style="color:#66d9ef">b</span>],<span style="color:#ae81ff">6</span> <span style="color:#75715e">//b赋值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">max</span>(<span style="color:#960050;background-color:#1e0010">&amp;</span><span style="color:#66d9ef">a</span>, <span style="color:#960050;background-color:#1e0010">&amp;</span><span style="color:#66d9ef">b</span>)<span style="color:#75715e">; //获取变量的内存地址 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">00</span><span style="color:#a6e22e">B818ED</span>  <span style="color:#66d9ef">lea</span>         <span style="color:#66d9ef">eax</span>,[<span style="color:#66d9ef">b</span>]   <span style="color:#75715e">//第二个参数 lea取的是地址
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">00</span><span style="color:#a6e22e">B818F0</span>  <span style="color:#66d9ef">push</span>        <span style="color:#66d9ef">eax</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00</span><span style="color:#66d9ef">B818F1</span>  <span style="color:#66d9ef">lea</span>         <span style="color:#66d9ef">ecx</span>,[<span style="color:#66d9ef">a</span>]   <span style="color:#75715e">//第一个参数 lea取的是地址
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">00</span><span style="color:#a6e22e">B818F4</span>  <span style="color:#66d9ef">push</span>        <span style="color:#66d9ef">ecx</span>  
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00</span><span style="color:#66d9ef">B818F5</span>  <span style="color:#66d9ef">call</span>        <span style="color:#66d9ef">max</span> (<span style="color:#ae81ff">0</span><span style="color:#66d9ef">B81280h</span>)  <span style="color:#75715e">//调用 max 子程序
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">00</span><span style="color:#a6e22e">B818FA</span>  <span style="color:#66d9ef">add</span>         <span style="color:#66d9ef">esp</span>,<span style="color:#ae81ff">8</span>  <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#66d9ef">_cdecl</span><span style="color:#960050;background-color:#1e0010">）</span>
 </span></span></code></pre></div><p>max()</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>00B81787  mov         ecx,offset _99047FA2_源@cpp (0B8C003h)  
 </span></span><span style="display:flex;"><span>00B8178C  call        @__CheckForDebuggerJustMyCode@4 (0B8131Bh)  
@@ -707,38 +707,38 @@ Fastcall特点就快（因为寄存器传参的原因）<br>
 </span></span><span style="display:flex;"><span>	 z<span style="color:#f92672">=</span>x<span style="color:#f92672">+</span>y;
 </span></span><span style="display:flex;"><span>	 <span style="color:#66d9ef">return</span>(z);
 </span></span><span style="display:flex;"><span> }
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>.text:004117B0                 push    ebp
-</span></span><span style="display:flex;"><span>.text:004117B1                 mov     ebp, esp
-</span></span><span style="display:flex;"><span>.text:004117B3                 sub     esp, 0D8h  //局部变量申请的栈内存空间
-</span></span><span style="display:flex;"><span>.text:004117B9                 push    ebx
-</span></span><span style="display:flex;"><span>.text:004117BA                 push    esi
-</span></span><span style="display:flex;"><span>.text:004117BB                 push    edi
-</span></span><span style="display:flex;"><span>.text:004117BC                 lea     edi, [ebp+var_18]
-</span></span><span style="display:flex;"><span>.text:004117BF                 mov     ecx, 6
-</span></span><span style="display:flex;"><span>.text:004117C4                 mov     eax, 0CCCCCCCCh
-</span></span><span style="display:flex;"><span>.text:004117C9                 rep stosd
-</span></span><span style="display:flex;"><span>.text:004117CB                 mov     ecx, offset unk_41C000
-</span></span><span style="display:flex;"><span>.text:004117D0                 call    j_@__CheckForDebuggerJustMyCode@4 ; __CheckForDebuggerJustMyCode(x)
-</span></span><span style="display:flex;"><span>.text:004117D5                 mov     [ebp+var_8], 5  //局部变量放入var_8中
-</span></span><span style="display:flex;"><span>.text:004117DC                 mov     [ebp+var_14], 6 //局部变量放入var_14中
-</span></span><span style="display:flex;"><span>.text:004117E3                 mov     eax, [ebp+var_14] //取出var_14放入eax
-</span></span><span style="display:flex;"><span>.text:004117E6                 push    eax
-</span></span><span style="display:flex;"><span>.text:004117E7                 mov     ecx, [ebp+var_8] //取出var_8放入ecx
-</span></span><span style="display:flex;"><span>.text:004117EA                 push    ecx
-</span></span><span style="display:flex;"><span>.text:004117EB                 call    sub_4112AD
-</span></span><span style="display:flex;"><span>.text:004117F0                 add     esp, 8 //平栈 _cdecl
-</span></span><span style="display:flex;"><span>.text:004117F3                 xor     eax, eax
-</span></span><span style="display:flex;"><span>.text:004117F5                 pop     edi
-</span></span><span style="display:flex;"><span>.text:004117F6                 pop     esi
-</span></span><span style="display:flex;"><span>.text:004117F7                 pop     ebx
-</span></span><span style="display:flex;"><span>.text:004117F8                 add     esp, 0D8h //回收申请的栈内存空间
-</span></span><span style="display:flex;"><span>.text:004117FE                 cmp     ebp, esp
-</span></span><span style="display:flex;"><span>.text:00411800                 call    j___RTC_CheckEsp
-</span></span><span style="display:flex;"><span>.text:00411805                 mov     esp, ebp
-</span></span><span style="display:flex;"><span>.text:00411807                 pop     ebp
-</span></span><span style="display:flex;"><span>.text:00411808                 retn
-</span></span><span style="display:flex;"><span>.text:00411808 _main_0         endp
-</span></span><span style="display:flex;"><span>.text:00411808
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">B0</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">ebp</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">B1</span>                 <span style="color:#66d9ef">mov</span>     <span style="color:#66d9ef">ebp</span>, <span style="color:#66d9ef">esp</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">B3</span>                 <span style="color:#66d9ef">sub</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">0</span><span style="color:#66d9ef">D8h</span>  <span style="color:#75715e">//局部变量申请的栈内存空间
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">B9</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">ebx</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">BA</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">esi</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">BB</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">edi</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">BC</span>                 <span style="color:#66d9ef">lea</span>     <span style="color:#66d9ef">edi</span>, [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_18</span>]
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">BF</span>                 <span style="color:#66d9ef">mov</span>     <span style="color:#66d9ef">ecx</span>, <span style="color:#ae81ff">6</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">C4</span>                 <span style="color:#66d9ef">mov</span>     <span style="color:#66d9ef">eax</span>, <span style="color:#ae81ff">0</span><span style="color:#66d9ef">CCCCCCCCh</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">C9</span>                 <span style="color:#66d9ef">rep</span> <span style="color:#66d9ef">stosd</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">CB</span>                 <span style="color:#66d9ef">mov</span>     <span style="color:#66d9ef">ecx</span>, <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">unk_41C000</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">D0</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">j_@__CheckForDebuggerJustMyCode@4</span> <span style="color:#75715e">; __CheckForDebuggerJustMyCode(x)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">D5</span>                 <span style="color:#66d9ef">mov</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_8</span>], <span style="color:#ae81ff">5</span>  <span style="color:#75715e">//局部变量放入var_8中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">DC</span>                 <span style="color:#66d9ef">mov</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_14</span>], <span style="color:#ae81ff">6</span> <span style="color:#75715e">//局部变量放入var_14中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">E3</span>                 <span style="color:#66d9ef">mov</span>     <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_14</span>] <span style="color:#75715e">//取出var_14放入eax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">E6</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">eax</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">E7</span>                 <span style="color:#66d9ef">mov</span>     <span style="color:#66d9ef">ecx</span>, [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_8</span>] <span style="color:#75715e">//取出var_8放入ecx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">EA</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">ecx</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">EB</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">sub_4112AD</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">F0</span>                 <span style="color:#66d9ef">add</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">8</span> <span style="color:#75715e">//平栈 _cdecl
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">F3</span>                 <span style="color:#66d9ef">xor</span>     <span style="color:#66d9ef">eax</span>, <span style="color:#66d9ef">eax</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">F5</span>                 <span style="color:#66d9ef">pop</span>     <span style="color:#66d9ef">edi</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">F6</span>                 <span style="color:#66d9ef">pop</span>     <span style="color:#66d9ef">esi</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">F7</span>                 <span style="color:#66d9ef">pop</span>     <span style="color:#66d9ef">ebx</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">F8</span>                 <span style="color:#66d9ef">add</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">0</span><span style="color:#66d9ef">D8h</span> <span style="color:#75715e">//回收申请的栈内存空间
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">004117</span><span style="color:#a6e22e">FE</span>                 <span style="color:#66d9ef">cmp</span>     <span style="color:#66d9ef">ebp</span>, <span style="color:#66d9ef">esp</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00411800</span>                 <span style="color:#a6e22e">call</span>    <span style="color:#66d9ef">j___RTC_CheckEsp</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00411805</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#66d9ef">ebp</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00411807</span>                 <span style="color:#a6e22e">pop</span>     <span style="color:#66d9ef">ebp</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00411808</span>                 <span style="color:#a6e22e">retn</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00411808</span> <span style="color:#a6e22e">_main_0</span>         <span style="color:#66d9ef">endp</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00411808</span>
 </span></span></code></pre></div><ul>
 <li>利用寄存器存放局部变量
 除了esp，ebp栈寄存器，其余6个通用寄存器尽可能的存放变量，这样可以减少代码提高程序的执行效率，逆向分析中<code>局部变量生命周期短，必须及时确定当前寄存器的变量是那个变量</code></li>
@@ -764,40 +764,40 @@ Fastcall特点就快（因为寄存器传参的原因）<br>
 </span></span><span style="display:flex;"><span>	 <span style="color:#66d9ef">return</span>(x<span style="color:#f92672">+</span>y<span style="color:#f92672">+</span>z);
 </span></span><span style="display:flex;"><span> }
 </span></span></code></pre></div><p>main</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>push    ebp
-</span></span><span style="display:flex;"><span>mov     ebp, esp
-</span></span><span style="display:flex;"><span>sub     esp, 0D8h //局部变量申请空间 
-</span></span><span style="display:flex;"><span>.......
-</span></span><span style="display:flex;"><span>mov     ecx, 6
-</span></span><span style="display:flex;"><span>mov     eax, 0CCCCCCCCh
-</span></span><span style="display:flex;"><span>rep stosd
-</span></span><span style="display:flex;"><span>mov     ecx, offset unk_41C000
-</span></span><span style="display:flex;"><span>call    j_@__CheckForDebuggerJustMyCode@4 ; __CheckForDebuggerJustMyCode(x)
-</span></span><span style="display:flex;"><span>mov     [ebp+var_8], 5  //局部变量
-</span></span><span style="display:flex;"><span>mov     [ebp+var_14], 6 //局部变量
-</span></span><span style="display:flex;"><span>mov     dword_41A138, 7 //全局变量 
-</span></span><span style="display:flex;"><span>mov     eax, [ebp+var_14]
-</span></span><span style="display:flex;"><span>push    eax
-</span></span><span style="display:flex;"><span>......
-</span></span><span style="display:flex;"><span>retn
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#a6e22e">push</span>    <span style="color:#66d9ef">ebp</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">ebp</span>, <span style="color:#66d9ef">esp</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sub</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">0</span><span style="color:#66d9ef">D8h</span> <span style="color:#75715e">//局部变量申请空间 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">.......</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">ecx</span>, <span style="color:#ae81ff">6</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">eax</span>, <span style="color:#ae81ff">0</span><span style="color:#66d9ef">CCCCCCCCh</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">rep</span> <span style="color:#a6e22e">stosd</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">ecx</span>, <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">unk_41C000</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">call</span>    <span style="color:#66d9ef">j_@__CheckForDebuggerJustMyCode@4</span> <span style="color:#75715e">; __CheckForDebuggerJustMyCode(x)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">mov</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_8</span>], <span style="color:#ae81ff">5</span>  <span style="color:#75715e">//局部变量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">mov</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_14</span>], <span style="color:#ae81ff">6</span> <span style="color:#75715e">//局部变量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">dword_41A138</span>, <span style="color:#ae81ff">7</span> <span style="color:#75715e">//全局变量 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_14</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">push</span>    <span style="color:#66d9ef">eax</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">......</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">retn</span>
 </span></span></code></pre></div><p>add()</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>push    ebp
-</span></span><span style="display:flex;"><span>mov     ebp, esp
-</span></span><span style="display:flex;"><span>sub     esp, 0C0h
-</span></span><span style="display:flex;"><span>......
-</span></span><span style="display:flex;"><span>mov     eax, 0CCCCCCCCh
-</span></span><span style="display:flex;"><span>rep stosd
-</span></span><span style="display:flex;"><span>mov     ecx, offset unk_41C000
-</span></span><span style="display:flex;"><span>call    j_@__CheckForDebuggerJustMyCode@4 ; __CheckForDebuggerJustMyCode(x)
-</span></span><span style="display:flex;"><span>mov     eax, [ebp+arg_0]
-</span></span><span style="display:flex;"><span>add     eax, [ebp+arg_4]
-</span></span><span style="display:flex;"><span>add     eax, dword_41A138  //全局变量 
-</span></span><span style="display:flex;"><span>pop     edi
-</span></span><span style="display:flex;"><span>......
-</span></span><span style="display:flex;"><span>call    j___RTC_CheckEsp
-</span></span><span style="display:flex;"><span>mov     esp, ebp
-</span></span><span style="display:flex;"><span>pop     ebp
-</span></span><span style="display:flex;"><span>retn
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#a6e22e">push</span>    <span style="color:#66d9ef">ebp</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">ebp</span>, <span style="color:#66d9ef">esp</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sub</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">0</span><span style="color:#66d9ef">C0h</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">......</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">eax</span>, <span style="color:#ae81ff">0</span><span style="color:#66d9ef">CCCCCCCCh</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">rep</span> <span style="color:#a6e22e">stosd</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">ecx</span>, <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">unk_41C000</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">call</span>    <span style="color:#66d9ef">j_@__CheckForDebuggerJustMyCode@4</span> <span style="color:#75715e">; __CheckForDebuggerJustMyCode(x)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">arg_0</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span>     <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">arg_4</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span>     <span style="color:#66d9ef">eax</span>, <span style="color:#66d9ef">dword_41A138</span>  <span style="color:#75715e">//全局变量 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">pop</span>     <span style="color:#66d9ef">edi</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">......</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">call</span>    <span style="color:#66d9ef">j___RTC_CheckEsp</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#66d9ef">ebp</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pop</span>     <span style="color:#66d9ef">ebp</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">retn</span>
 </span></span></code></pre></div><p>charGPT回答</p>
 <blockquote>
 <p>可以通过查看汇编代码中的内存地址来判断变量是局部变量还是全局变量。在汇编中，局部变量通常存储在堆栈中，而全局变量则存储在数据段中。通过查看变量的内存地址，如果它在堆栈范围内，则是局部变量，否则是全局变量。</p>
@@ -823,44 +823,44 @@ Fastcall特点就快（因为寄存器传参的原因）<br>
 </span></span><span style="display:flex;"><span>	
 </span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>.text:00401009                 mov     edi, dword_407030[eax] ; ;dword_407030是数组的空间位置, eax 现在是0 指向第一个元素
-</span></span><span style="display:flex;"><span>.text:0040100F                 add     eax, 4          ; eax = 4 这是偏移下一次的地址指向了dword_407034
-</span></span><span style="display:flex;"><span>.text:00401012                 add     ecx, edi        ; ;ecx = dword_407030 数组列表
-</span></span><span style="display:flex;"><span>.text:00401014                 cmp     eax, 0Ch        ; ;if eax == 12
-</span></span><span style="display:flex;"><span>.text:00401017                 mov     [esp+eax+14h+var_10], ecx ; [esp+eax+14h+var_10] = dword_407030
-</span></span><span style="display:flex;"><span>.text:0040101B                 jl      short loc_401009 ; 等于12的时候就不跳转了
-</span></span><span style="display:flex;"><span>.text:0040101D                 lea     esi, [esp+14h+var_C] ; 数组列表现在到esi中了
-</span></span><span style="display:flex;"><span>.text:00401021                 mov     edi, 3          ; edi = 3 覆盖了数组元素
-</span></span><span style="display:flex;"><span>.text:00401026
-</span></span><span style="display:flex;"><span>.text:00401026 loc_401026:                             ; CODE XREF: _main+3A↓j
-</span></span><span style="display:flex;"><span>.text:00401026                 mov     eax, [esi]      ; 第二个循环
-</span></span><span style="display:flex;"><span>.text:00401028                 push    eax
-</span></span><span style="display:flex;"><span>.text:00401029                 push    offset aD       ; &#34;%d&#34;
-</span></span><span style="display:flex;"><span>.text:0040102E                 call    printf          ; 打印一次
-</span></span><span style="display:flex;"><span>.text:00401033                 add     esp, 8          ; 栈平衡
-</span></span><span style="display:flex;"><span>.text:00401036                 add     esi, 4          ; 数组指向下一个元素
-</span></span><span style="display:flex;"><span>.text:00401039                 dec     edi             ; edi = 3-1计数器
-</span></span><span style="display:flex;"><span>.text:0040103A                 jnz     short loc_401026 ; 第二个循环
-</span></span><span style="display:flex;"><span>.text:0040103C                 pop     edi
-</span></span><span style="display:flex;"><span>.text:0040103D                 xor     eax, eax
-</span></span><span style="display:flex;"><span>.text:0040103F                 pop     esi
-</span></span><span style="display:flex;"><span>.text:00401040                 add     esp, 0Ch
-</span></span><span style="display:flex;"><span>.text:00401043                 retn
-</span></span><span style="display:flex;"><span>.text:00401043 _main           endp
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401009</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">edi</span>, <span style="color:#66d9ef">dword_407030</span>[<span style="color:#66d9ef">eax</span>] <span style="color:#75715e">; ;dword_407030是数组的空间位置, eax 现在是0 指向第一个元素
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040100</span><span style="color:#a6e22e">F</span>                 <span style="color:#66d9ef">add</span>     <span style="color:#66d9ef">eax</span>, <span style="color:#ae81ff">4</span>          <span style="color:#75715e">; eax = 4 这是偏移下一次的地址指向了dword_407034
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401012</span>                 <span style="color:#a6e22e">add</span>     <span style="color:#66d9ef">ecx</span>, <span style="color:#66d9ef">edi</span>        <span style="color:#75715e">; ;ecx = dword_407030 数组列表
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401014</span>                 <span style="color:#a6e22e">cmp</span>     <span style="color:#66d9ef">eax</span>, <span style="color:#ae81ff">0</span><span style="color:#66d9ef">Ch</span>        <span style="color:#75715e">; ;if eax == 12
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401017</span>                 <span style="color:#a6e22e">mov</span>     [<span style="color:#66d9ef">esp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">eax</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">14</span><span style="color:#66d9ef">h</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_10</span>], <span style="color:#66d9ef">ecx</span> <span style="color:#75715e">; [esp+eax+14h+var_10] = dword_407030
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040101</span><span style="color:#a6e22e">B</span>                 <span style="color:#66d9ef">jl</span>      <span style="color:#66d9ef">short</span> <span style="color:#66d9ef">loc_401009</span> <span style="color:#75715e">; 等于12的时候就不跳转了
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040101</span><span style="color:#a6e22e">D</span>                 <span style="color:#66d9ef">lea</span>     <span style="color:#66d9ef">esi</span>, [<span style="color:#66d9ef">esp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">14</span><span style="color:#66d9ef">h</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_C</span>] <span style="color:#75715e">; 数组列表现在到esi中了
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401021</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">edi</span>, <span style="color:#ae81ff">3</span>          <span style="color:#75715e">; edi = 3 覆盖了数组元素
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401026</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401026</span> loc_401026:                             <span style="color:#75715e">; CODE XREF: _main+3A↓j
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401026</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">esi</span>]      <span style="color:#75715e">; 第二个循环
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401028</span>                 <span style="color:#a6e22e">push</span>    <span style="color:#66d9ef">eax</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401029</span>                 <span style="color:#a6e22e">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">aD</span>       <span style="color:#75715e">; &#34;%d&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040102</span><span style="color:#a6e22e">E</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">printf</span>          <span style="color:#75715e">; 打印一次
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401033</span>                 <span style="color:#a6e22e">add</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">8</span>          <span style="color:#75715e">; 栈平衡
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401036</span>                 <span style="color:#a6e22e">add</span>     <span style="color:#66d9ef">esi</span>, <span style="color:#ae81ff">4</span>          <span style="color:#75715e">; 数组指向下一个元素
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401039</span>                 <span style="color:#a6e22e">dec</span>     <span style="color:#66d9ef">edi</span>             <span style="color:#75715e">; edi = 3-1计数器
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040103</span><span style="color:#a6e22e">A</span>                 <span style="color:#66d9ef">jnz</span>     <span style="color:#66d9ef">short</span> <span style="color:#66d9ef">loc_401026</span> <span style="color:#75715e">; 第二个循环
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040103</span><span style="color:#a6e22e">C</span>                 <span style="color:#66d9ef">pop</span>     <span style="color:#66d9ef">edi</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040103</span><span style="color:#a6e22e">D</span>                 <span style="color:#66d9ef">xor</span>     <span style="color:#66d9ef">eax</span>, <span style="color:#66d9ef">eax</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040103</span><span style="color:#a6e22e">F</span>                 <span style="color:#66d9ef">pop</span>     <span style="color:#66d9ef">esi</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401040</span>                 <span style="color:#a6e22e">add</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">0</span><span style="color:#66d9ef">Ch</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401043</span>                 <span style="color:#a6e22e">retn</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401043</span> <span style="color:#a6e22e">_main</span>           <span style="color:#66d9ef">endp</span>
 </span></span></code></pre></div><p>dword_407030</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>.data:0040702C                 align 10h ;[0]第一个元素
-</span></span><span style="display:flex;"><span>.data:00407030 dword_407030    dd 11h                  ; DATA XREF: _main:loc_401009↑r
-</span></span><span style="display:flex;"><span>.data:00407034                 db  22h ; &#34;
-</span></span><span style="display:flex;"><span>.data:00407035                 db    0
-</span></span><span style="display:flex;"><span>.data:00407036                 db    0
-</span></span><span style="display:flex;"><span>.data:00407037                 db    0
-</span></span><span style="display:flex;"><span>.data:00407038                 db  33h ;最后指向的元素
-</span></span><span style="display:flex;"><span>.data:00407039                 db    0
-</span></span><span style="display:flex;"><span>.data:0040703A                 db    0
-</span></span><span style="display:flex;"><span>.data:0040703B                 db    0
-</span></span><span style="display:flex;"><span>.data:0040703C aD              db &#39;%d&#39;                 ; DATA XREF: _main+29↑o
-</span></span><span style="display:flex;"><span>.data:0040703E                 db  0Ah
-</span></span><span style="display:flex;"><span>.data:0040703F                 db    0
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span>.data:<span style="color:#960050;background-color:#1e0010">0040702</span><span style="color:#a6e22e">C</span>                 <span style="color:#66d9ef">align</span> <span style="color:#ae81ff">10</span><span style="color:#66d9ef">h</span> <span style="color:#75715e">;[0]第一个元素
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.data:<span style="color:#960050;background-color:#1e0010">00407030</span> <span style="color:#a6e22e">dword_407030</span>    <span style="color:#66d9ef">dd</span> <span style="color:#ae81ff">11</span><span style="color:#66d9ef">h</span>                  <span style="color:#75715e">; DATA XREF: _main:loc_401009↑r
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.data:<span style="color:#960050;background-color:#1e0010">00407034</span>                 <span style="color:#a6e22e">db</span>  <span style="color:#ae81ff">22</span><span style="color:#66d9ef">h</span> <span style="color:#75715e">; &#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.data:<span style="color:#960050;background-color:#1e0010">00407035</span>                 <span style="color:#a6e22e">db</span>    <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>.data:<span style="color:#960050;background-color:#1e0010">00407036</span>                 <span style="color:#a6e22e">db</span>    <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>.data:<span style="color:#960050;background-color:#1e0010">00407037</span>                 <span style="color:#a6e22e">db</span>    <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>.data:<span style="color:#960050;background-color:#1e0010">00407038</span>                 <span style="color:#a6e22e">db</span>  <span style="color:#ae81ff">33</span><span style="color:#66d9ef">h</span> <span style="color:#75715e">;最后指向的元素
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.data:<span style="color:#960050;background-color:#1e0010">00407039</span>                 <span style="color:#a6e22e">db</span>    <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>.data:<span style="color:#960050;background-color:#1e0010">0040703</span><span style="color:#a6e22e">A</span>                 <span style="color:#66d9ef">db</span>    <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>.data:<span style="color:#960050;background-color:#1e0010">0040703</span><span style="color:#a6e22e">B</span>                 <span style="color:#66d9ef">db</span>    <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>.data:<span style="color:#960050;background-color:#1e0010">0040703</span><span style="color:#a6e22e">C</span> <span style="color:#66d9ef">aD</span>              <span style="color:#66d9ef">db</span> <span style="color:#960050;background-color:#1e0010">&#39;</span>%d<span style="color:#960050;background-color:#1e0010">&#39;</span>                 <span style="color:#75715e">; DATA XREF: _main+29↑o
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.data:<span style="color:#960050;background-color:#1e0010">0040703</span><span style="color:#a6e22e">E</span>                 <span style="color:#66d9ef">db</span>  <span style="color:#ae81ff">0</span><span style="color:#66d9ef">Ah</span>
+</span></span><span style="display:flex;"><span>.data:<span style="color:#960050;background-color:#1e0010">0040703</span><span style="color:#a6e22e">F</span>                 <span style="color:#66d9ef">db</span>    <span style="color:#ae81ff">0</span>
 </span></span></code></pre></div><h1 id="第四章虚函数">第四章虚函数<a hidden class="anchor" aria-hidden="true" href="#第四章虚函数">#</a></h1>
 <p>虚函数是在程序运行之前定义的函数，虚函数的地址不能在编译时确定，只能在调用即将进行时确定。所有的虚函数引用通常放在一个专用的数组————虚函数表，数组中的每个元素存放的就是类中的虚函数地址。</p>
 <ul>
@@ -895,38 +895,38 @@ Fastcall特点就快（因为寄存器传参的原因）<br>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>} 
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>.text:00401000                 push    esi
-</span></span><span style="display:flex;"><span>.text:00401001                 push    4               ; Size
-</span></span><span style="display:flex;"><span>.text:00401003                 call    ??2@YAPAXI@Z    ; new()函数，这里决定了虚表的位置
-</span></span><span style="display:flex;"><span>.text:00401008                 add     esp, 4
-</span></span><span style="display:flex;"><span>.text:0040100B                 test    eax, eax
-</span></span><span style="display:flex;"><span>.text:0040100D                 jz      short loc_401019
-</span></span><span style="display:flex;"><span>.text:0040100F                 mov     dword ptr [eax], offset off_4050A0 ; 这是指向虚表的的指针，eax的地址存放的内容是004050A0
-</span></span><span style="display:flex;"><span>.text:00401015                 mov     esi, eax        ; esi=eax的内存地址
-</span></span><span style="display:flex;"><span>.text:00401017                 jmp     short loc_40101B ; eax = esi = eax存放在该地址的内容 = 004050A0，[]取的是内容
-</span></span><span style="display:flex;"><span>.text:00401019 ; ---------------------------------------------------------------------------
-</span></span><span style="display:flex;"><span>.text:00401019
-</span></span><span style="display:flex;"><span>.text:00401019 loc_401019:                             ; CODE XREF: _main+D↑j
-</span></span><span style="display:flex;"><span>.text:00401019                 xor     esi, esi
-</span></span><span style="display:flex;"><span>.text:0040101B
-</span></span><span style="display:flex;"><span>.text:0040101B loc_40101B:                             ; CODE XREF: _main+17↑j
-</span></span><span style="display:flex;"><span>.text:0040101B                 mov     eax, [esi]      ; eax = esi = eax存放在该地址的内容 = 004050A0，[]取的是内容
-</span></span><span style="display:flex;"><span>.text:0040101D                 push    2
-</span></span><span style="display:flex;"><span>.text:0040101F                 push    1
-</span></span><span style="display:flex;"><span>.text:00401021                 mov     ecx, esi        ; ecx = esi = eax的内存地址
-</span></span><span style="display:flex;"><span>.text:00401023                 call    dword ptr [eax] ; 第一次调用函数
-</span></span><span style="display:flex;"><span>.text:00401025                 mov     edx, [esi]      ; edx = 004050A0
-</span></span><span style="display:flex;"><span>.text:00401027                 push    2
-</span></span><span style="display:flex;"><span>.text:00401029                 push    1
-</span></span><span style="display:flex;"><span>.text:0040102B                 mov     ecx, esi
-</span></span><span style="display:flex;"><span>.text:0040102D                 call    dword ptr [edx+4] ; 因为在内存中是连续的，所以第二次调用+4的偏移。004050A4 = 4 + (edx = 004050A0)
-</span></span><span style="display:flex;"><span>.text:00401030                 pop     esi
-</span></span><span style="display:flex;"><span>.text:00401031                 retn
-</span></span><span style="display:flex;"><span>.text:00401031 _main           endp
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401000</span>                 <span style="color:#a6e22e">push</span>    <span style="color:#66d9ef">esi</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401001</span>                 <span style="color:#a6e22e">push</span>    <span style="color:#ae81ff">4</span>               <span style="color:#75715e">; Size
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401003</span>                 <span style="color:#a6e22e">call</span>    <span style="color:#960050;background-color:#1e0010">??</span><span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">@</span><span style="color:#66d9ef">YAPAXI@Z</span>    <span style="color:#75715e">; new()函数，这里决定了虚表的位置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401008</span>                 <span style="color:#a6e22e">add</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">4</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040100</span><span style="color:#a6e22e">B</span>                 <span style="color:#66d9ef">test</span>    <span style="color:#66d9ef">eax</span>, <span style="color:#66d9ef">eax</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040100</span><span style="color:#a6e22e">D</span>                 <span style="color:#66d9ef">jz</span>      <span style="color:#66d9ef">short</span> <span style="color:#66d9ef">loc_401019</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040100</span><span style="color:#a6e22e">F</span>                 <span style="color:#66d9ef">mov</span>     <span style="color:#66d9ef">dword</span> <span style="color:#66d9ef">ptr</span> [<span style="color:#66d9ef">eax</span>], <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">off_4050A0</span> <span style="color:#75715e">; 这是指向虚表的的指针，eax的地址存放的内容是004050A0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401015</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">esi</span>, <span style="color:#66d9ef">eax</span>        <span style="color:#75715e">; esi=eax的内存地址
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401017</span>                 <span style="color:#a6e22e">jmp</span>     <span style="color:#66d9ef">short</span> <span style="color:#66d9ef">loc_40101B</span> <span style="color:#75715e">; eax = esi = eax存放在该地址的内容 = 004050A0，[]取的是内容
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401019</span> <span style="color:#75715e">; ---------------------------------------------------------------------------
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401019</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401019</span> loc_401019:                             <span style="color:#75715e">; CODE XREF: _main+D↑j
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401019</span>                 <span style="color:#a6e22e">xor</span>     <span style="color:#66d9ef">esi</span>, <span style="color:#66d9ef">esi</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040101</span><span style="color:#a6e22e">B</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040101</span><span style="color:#a6e22e">B</span> <span style="color:#66d9ef">loc_40101B</span>:                             <span style="color:#75715e">; CODE XREF: _main+17↑j
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040101</span><span style="color:#a6e22e">B</span>                 <span style="color:#66d9ef">mov</span>     <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">esi</span>]      <span style="color:#75715e">; eax = esi = eax存放在该地址的内容 = 004050A0，[]取的是内容
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040101</span><span style="color:#a6e22e">D</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040101</span><span style="color:#a6e22e">F</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401021</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">ecx</span>, <span style="color:#66d9ef">esi</span>        <span style="color:#75715e">; ecx = esi = eax的内存地址
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401023</span>                 <span style="color:#a6e22e">call</span>    <span style="color:#66d9ef">dword</span> <span style="color:#66d9ef">ptr</span> [<span style="color:#66d9ef">eax</span>] <span style="color:#75715e">; 第一次调用函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401025</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">edx</span>, [<span style="color:#66d9ef">esi</span>]      <span style="color:#75715e">; edx = 004050A0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401027</span>                 <span style="color:#a6e22e">push</span>    <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401029</span>                 <span style="color:#a6e22e">push</span>    <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040102</span><span style="color:#a6e22e">B</span>                 <span style="color:#66d9ef">mov</span>     <span style="color:#66d9ef">ecx</span>, <span style="color:#66d9ef">esi</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040102</span><span style="color:#a6e22e">D</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">dword</span> <span style="color:#66d9ef">ptr</span> [<span style="color:#66d9ef">edx</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">4</span>] <span style="color:#75715e">; 因为在内存中是连续的，所以第二次调用+4的偏移。004050A4 = 4 + (edx = 004050A0)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401030</span>                 <span style="color:#a6e22e">pop</span>     <span style="color:#66d9ef">esi</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401031</span>                 <span style="color:#a6e22e">retn</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401031</span> <span style="color:#a6e22e">_main</span>           <span style="color:#66d9ef">endp</span>
 </span></span></code></pre></div><p>现在可以看看004050A0这位置存放的是什么</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>.rdata:004050A0 off_4050A0      dd offset sub_401040    ; DATA XREF: _main+F↑o //add函数
-</span></span><span style="display:flex;"><span>.rdata:004050A4                 dd offset sub_401050 //sub函数
-</span></span></code></pre></div><p>004050A0、004050A4就是不同函数的地址</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span>.rdata:<span style="color:#960050;background-color:#1e0010">004050</span><span style="color:#a6e22e">A0</span> <span style="color:#66d9ef">off_4050A0</span>      <span style="color:#66d9ef">dd</span> <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">sub_401040</span>    <span style="color:#75715e">; DATA XREF: _main+F↑o //add函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.rdata:<span style="color:#960050;background-color:#1e0010">004050</span><span style="color:#a6e22e">A4</span>                 <span style="color:#66d9ef">dd</span> <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">sub_401050</span> <span style="color:#75715e">//sub函数
+</span></span></span></code></pre></div><p>004050A0、004050A4就是不同函数的地址</p>
 <h1 id="第五章控制流程语句">第五章控制流程语句<a hidden class="anchor" aria-hidden="true" href="#第五章控制流程语句">#</a></h1>
 <h3 id="1-if判断httpsnoteyoudaocomsmmqysp84">1. <a href="https://note.youdao.com/s/MMQySP84">if判断</a><a hidden class="anchor" aria-hidden="true" href="#1-if判断httpsnoteyoudaocomsmmqysp84">#</a></h3>
 <h3 id="2-switch">2. switch<a hidden class="anchor" aria-hidden="true" href="#2-switch">#</a></h3>
@@ -951,33 +951,33 @@ Fastcall特点就快（因为寄存器传参的原因）<br>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>	 <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span> }
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>.text:0040100A                 push    offset Format   ; &#34;%d&#34;
-</span></span><span style="display:flex;"><span>.text:0040100F                 call    _scanf          ; scanf
-</span></span><span style="display:flex;"><span>.text:00401014                 add     esp, 8          ; 堆栈平衡
-</span></span><span style="display:flex;"><span>.text:00401017                 mov     ecx, [ebp+var_4]
-</span></span><span style="display:flex;"><span>.text:0040101A                 mov     [ebp+var_8], ecx ; switch(a)
-</span></span><span style="display:flex;"><span>.text:0040101D                 cmp     [ebp+var_8], 1  ; case 1:
-</span></span><span style="display:flex;"><span>.text:00401021                 jz      short loc_401031 ; print
-</span></span><span style="display:flex;"><span>.text:00401023                 cmp     [ebp+var_8], 2  ; case 2:
-</span></span><span style="display:flex;"><span>.text:00401027                 jz      short loc_401040
-</span></span><span style="display:flex;"><span>.text:00401029                 cmp     [ebp+var_8], 0Ah ; case 10:
-</span></span><span style="display:flex;"><span>.text:0040102D                 jz      short loc_40104F
-</span></span><span style="display:flex;"><span>.text:0040102F                 jmp     short loc_40105E
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040100</span><span style="color:#a6e22e">A</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">Format</span>   <span style="color:#75715e">; &#34;%d&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040100</span><span style="color:#a6e22e">F</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">_scanf</span>          <span style="color:#75715e">; scanf
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401014</span>                 <span style="color:#a6e22e">add</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">8</span>          <span style="color:#75715e">; 堆栈平衡
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401017</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">ecx</span>, [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_4</span>]
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040101</span><span style="color:#a6e22e">A</span>                 <span style="color:#66d9ef">mov</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_8</span>], <span style="color:#66d9ef">ecx</span> <span style="color:#75715e">; switch(a)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040101</span><span style="color:#a6e22e">D</span>                 <span style="color:#66d9ef">cmp</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_8</span>], <span style="color:#ae81ff">1</span>  <span style="color:#75715e">; case 1:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401021</span>                 <span style="color:#a6e22e">jz</span>      <span style="color:#66d9ef">short</span> <span style="color:#66d9ef">loc_401031</span> <span style="color:#75715e">; print
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401023</span>                 <span style="color:#a6e22e">cmp</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_8</span>], <span style="color:#ae81ff">2</span>  <span style="color:#75715e">; case 2:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401027</span>                 <span style="color:#a6e22e">jz</span>      <span style="color:#66d9ef">short</span> <span style="color:#66d9ef">loc_401040</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401029</span>                 <span style="color:#a6e22e">cmp</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_8</span>], <span style="color:#ae81ff">0</span><span style="color:#66d9ef">Ah</span> <span style="color:#75715e">; case 10:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040102</span><span style="color:#a6e22e">D</span>                 <span style="color:#66d9ef">jz</span>      <span style="color:#66d9ef">short</span> <span style="color:#66d9ef">loc_40104F</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040102</span><span style="color:#a6e22e">F</span>                 <span style="color:#66d9ef">jmp</span>     <span style="color:#66d9ef">short</span> <span style="color:#66d9ef">loc_40105E</span>
 </span></span></code></pre></div><p>优化后的</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>.text:00401006                 push    offset Format   ; &#34;%d&#34;
-</span></span><span style="display:flex;"><span>.text:0040100B                 call    _scanf
-</span></span><span style="display:flex;"><span>.text:00401010                 mov     eax, [esp+0Ch+var_4]
-</span></span><span style="display:flex;"><span>.text:00401014                 add     esp, 8
-</span></span><span style="display:flex;"><span>.text:00401017                 dec     eax
-</span></span><span style="display:flex;"><span>.text:00401018                 jz      short loc_401055
-</span></span><span style="display:flex;"><span>.text:0040101A                 dec     eax
-</span></span><span style="display:flex;"><span>.text:0040101B                 jz      short loc_401044
-</span></span><span style="display:flex;"><span>.text:0040101D                 sub     eax, 8
-</span></span><span style="display:flex;"><span>.text:00401020                 jz      short loc_401033
-</span></span><span style="display:flex;"><span>.text:00401022                 push    offset aADefault ; &#34;a=default&#34;
-</span></span><span style="display:flex;"><span>.text:00401027                 call    sub_401070
-</span></span><span style="display:flex;"><span>.text:0040102C                 add     esp, 4
-</span></span><span style="display:flex;"><span>.text:0040102F                 xor     eax, eax
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401006</span>                 <span style="color:#a6e22e">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">Format</span>   <span style="color:#75715e">; &#34;%d&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040100</span><span style="color:#a6e22e">B</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">_scanf</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401010</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">esp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">0</span><span style="color:#66d9ef">Ch</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_4</span>]
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401014</span>                 <span style="color:#a6e22e">add</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401017</span>                 <span style="color:#a6e22e">dec</span>     <span style="color:#66d9ef">eax</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401018</span>                 <span style="color:#a6e22e">jz</span>      <span style="color:#66d9ef">short</span> <span style="color:#66d9ef">loc_401055</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040101</span><span style="color:#a6e22e">A</span>                 <span style="color:#66d9ef">dec</span>     <span style="color:#66d9ef">eax</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040101</span><span style="color:#a6e22e">B</span>                 <span style="color:#66d9ef">jz</span>      <span style="color:#66d9ef">short</span> <span style="color:#66d9ef">loc_401044</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040101</span><span style="color:#a6e22e">D</span>                 <span style="color:#66d9ef">sub</span>     <span style="color:#66d9ef">eax</span>, <span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401020</span>                 <span style="color:#a6e22e">jz</span>      <span style="color:#66d9ef">short</span> <span style="color:#66d9ef">loc_401033</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401022</span>                 <span style="color:#a6e22e">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">aADefault</span> <span style="color:#75715e">; &#34;a=default&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401027</span>                 <span style="color:#a6e22e">call</span>    <span style="color:#66d9ef">sub_401070</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040102</span><span style="color:#a6e22e">C</span>                 <span style="color:#66d9ef">add</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">4</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040102</span><span style="color:#a6e22e">F</span>                 <span style="color:#66d9ef">xor</span>     <span style="color:#66d9ef">eax</span>, <span style="color:#66d9ef">eax</span>
 </span></span></code></pre></div><p>最大的区别就是原先使用的时内存寻址现在使用的是寄存器，调用寄存器确实比寻址快，就是寄存器少。</p>
 <h3 id="22-switch跳转表">2.2 switch跳转表<a hidden class="anchor" aria-hidden="true" href="#22-switch跳转表">#</a></h3>
 <p>这个switch逆向有点东西，这个因为case多会生成switch跳转表再由跳转表进行跳转</p>
@@ -1012,30 +1012,30 @@ Fastcall特点就快（因为寄存器传参的原因）<br>
 </span></span><span style="display:flex;"><span>	 <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span> }
 </span></span></code></pre></div><p>假如我们输入的的是7</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>.text:00401000                 push    ecx
-</span></span><span style="display:flex;"><span>.text:00401001                 lea     eax, [esp+4+var_4]
-</span></span><span style="display:flex;"><span>.text:00401005                 push    eax
-</span></span><span style="display:flex;"><span>.text:00401006                 push    offset Format   ; &#34;%d&#34;
-</span></span><span style="display:flex;"><span>.text:0040100B                 call    _scanf
-</span></span><span style="display:flex;"><span>.text:00401010                 mov     ecx, [esp+0Ch+var_4] ; ecx是存放的是从缓冲区读取的内容
-</span></span><span style="display:flex;"><span>.text:00401014                 add     esp, 8
-</span></span><span style="display:flex;"><span>.text:00401017                 lea     eax, [ecx-1]    ; switch 7 cases
-</span></span><span style="display:flex;"><span>.text:0040101A                 cmp     eax, 6          ; 判断eax是否在六case之内。大于6进行ja跳转就是default分支
-</span></span><span style="display:flex;"><span>.text:0040101D                 ja      short def_40101F ; jumptable 0040101F default case
-</span></span><span style="display:flex;"><span>.text:0040101F                 jmp     ds:jpt_40101F[eax*4] ; switch jump 要在4010B0的地址偏移量（eax * 4 =要跳转的分支）
-</span></span></code></pre></div><p>走到<code>00401017</code>就会变成6，然后到<code>0040101A</code>进行比较相等不会触发<code>ja</code>跳转， 到<code>0040101F</code>的时候就是<code>(eax=6)*4 = 24</code>然后转换成16进制得到的偏移量就是<code>18</code>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401000</span>                 <span style="color:#a6e22e">push</span>    <span style="color:#66d9ef">ecx</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401001</span>                 <span style="color:#a6e22e">lea</span>     <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">esp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_4</span>]
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401005</span>                 <span style="color:#a6e22e">push</span>    <span style="color:#66d9ef">eax</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401006</span>                 <span style="color:#a6e22e">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">Format</span>   <span style="color:#75715e">; &#34;%d&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040100</span><span style="color:#a6e22e">B</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">_scanf</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401010</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">ecx</span>, [<span style="color:#66d9ef">esp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">0</span><span style="color:#66d9ef">Ch</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_4</span>] <span style="color:#75715e">; ecx是存放的是从缓冲区读取的内容
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401014</span>                 <span style="color:#a6e22e">add</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401017</span>                 <span style="color:#a6e22e">lea</span>     <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">ecx-1</span>]    <span style="color:#75715e">; switch 7 cases
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040101</span><span style="color:#a6e22e">A</span>                 <span style="color:#66d9ef">cmp</span>     <span style="color:#66d9ef">eax</span>, <span style="color:#ae81ff">6</span>          <span style="color:#75715e">; 判断eax是否在六case之内。大于6进行ja跳转就是default分支
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040101</span><span style="color:#a6e22e">D</span>                 <span style="color:#66d9ef">ja</span>      <span style="color:#66d9ef">short</span> <span style="color:#66d9ef">def_40101F</span> <span style="color:#75715e">; jumptable 0040101F default case
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040101</span><span style="color:#a6e22e">F</span>                 <span style="color:#66d9ef">jmp</span>     <span style="color:#66d9ef">ds</span>:<span style="color:#66d9ef">jpt_40101F</span>[<span style="color:#66d9ef">eax</span>*<span style="color:#ae81ff">4</span>] <span style="color:#75715e">; switch jump 要在4010B0的地址偏移量（eax * 4 =要跳转的分支）
+</span></span></span></code></pre></div><p>走到<code>00401017</code>就会变成6，然后到<code>0040101A</code>进行比较相等不会触发<code>ja</code>跳转， 到<code>0040101F</code>的时候就是<code>(eax=6)*4 = 24</code>然后转换成16进制得到的偏移量就是<code>18</code>
 <img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230427144421.png" alt=""  />
 
 得到的地址就是<code>0040108C</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>.text:0040108C
-</span></span><span style="display:flex;"><span>.text:0040108C loc_40108C:                             ; CODE XREF: _main+1F↑j
-</span></span><span style="display:flex;"><span>.text:0040108C                                         ; DATA XREF: .text:jpt_40101F↓o
-</span></span><span style="display:flex;"><span>.text:0040108C push    offset aA7                      ; jumptable 0040101F case 7 这是字符串
-</span></span><span style="display:flex;"><span>.text:00401091 call    printf
-</span></span><span style="display:flex;"><span>.text:00401096 add     esp, 4
-</span></span><span style="display:flex;"><span>.text:00401099 xor     eax, eax
-</span></span><span style="display:flex;"><span>.text:0040109B pop     ecx
-</span></span><span style="display:flex;"><span>.text:0040109C retn
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040108</span><span style="color:#a6e22e">C</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040108</span><span style="color:#a6e22e">C</span> <span style="color:#66d9ef">loc_40108C</span>:                             <span style="color:#75715e">; CODE XREF: _main+1F↑j
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040108</span><span style="color:#a6e22e">C</span>                                         <span style="color:#75715e">; DATA XREF: .text:jpt_40101F↓o
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040108</span><span style="color:#a6e22e">C</span> <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">aA7</span>                      <span style="color:#75715e">; jumptable 0040101F case 7 这是字符串
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401091</span> <span style="color:#a6e22e">call</span>    <span style="color:#66d9ef">printf</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401096</span> <span style="color:#a6e22e">add</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">4</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401099</span> <span style="color:#a6e22e">xor</span>     <span style="color:#66d9ef">eax</span>, <span style="color:#66d9ef">eax</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040109</span><span style="color:#a6e22e">B</span> <span style="color:#66d9ef">pop</span>     <span style="color:#66d9ef">ecx</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040109</span><span style="color:#a6e22e">C</span> <span style="color:#66d9ef">retn</span>
 </span></span></code></pre></div><ol start="3">
 <li>转移指令机器码计算（跳过）</li>
 <li>条件设置指令 （跳过）</li>
@@ -1052,13 +1052,13 @@ Fastcall特点就快（因为寄存器传参的原因）<br>
 </span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>lea 是一条纯计算指令</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>.text:00401000                 push    ecx
-</span></span><span style="display:flex;"><span>.text:00401001                 mov     eax, [esp+4+var_4] ; int a
-</span></span><span style="display:flex;"><span>.text:00401005                 mov     ecx, [esp+4+var_4] ; int b
-</span></span><span style="display:flex;"><span>.text:00401009                 lea     edx, [ecx+eax+78h] ; 计算a+b+0x78,结果放到edx中
-</span></span><span style="display:flex;"><span>.text:0040100D                 push    edx
-</span></span><span style="display:flex;"><span>.text:0040100E                 push    offset aD       ; &#34;%d&#34;
-</span></span><span style="display:flex;"><span>.text:00401013                 call    printf
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401000</span>                 <span style="color:#a6e22e">push</span>    <span style="color:#66d9ef">ecx</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">00401001</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">esp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_4</span>] <span style="color:#75715e">; int a
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401005</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">ecx</span>, [<span style="color:#66d9ef">esp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_4</span>] <span style="color:#75715e">; int b
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401009</span>                 <span style="color:#a6e22e">lea</span>     <span style="color:#66d9ef">edx</span>, [<span style="color:#66d9ef">ecx</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">eax</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">78</span><span style="color:#66d9ef">h</span>] <span style="color:#75715e">; 计算a+b+0x78,结果放到edx中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0040100</span><span style="color:#a6e22e">D</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">edx</span>
+</span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0040100</span><span style="color:#a6e22e">E</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">aD</span>       <span style="color:#75715e">; &#34;%d&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">00401013</span>                 <span style="color:#a6e22e">call</span>    <span style="color:#66d9ef">printf</span>
 </span></span></code></pre></div><ol start="2">
 <li>除法（这个可以看C++反汇编大揭秘书上讲的比较好）</li>
 </ol>
@@ -1074,10 +1074,10 @@ Fastcall特点就快（因为寄存器传参的原因）<br>
 <ol start="2">
 <li>字符寻址指令</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>mov eax,[00401000] ;直接寻址，把00401000地址的双字节数据放到eax中
-</span></span><span style="display:flex;"><span>mov eax, [ecx] ;间接寻址, 即把ecx中的地址所指的内容放到eax
-</span></span><span style="display:flex;"><span>lea eax,[00401000] ;把00401000装到eax中
-</span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">eax</span>,[<span style="color:#ae81ff">00401000</span>] <span style="color:#75715e">;直接寻址，把00401000地址的双字节数据放到eax中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">ecx</span>] <span style="color:#75715e">;间接寻址, 即把ecx中的地址所指的内容放到eax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">lea</span> <span style="color:#66d9ef">eax</span>,[<span style="color:#ae81ff">00401000</span>] <span style="color:#75715e">;把00401000装到eax中
+</span></span></span></code></pre></div>
 
         </div>
 

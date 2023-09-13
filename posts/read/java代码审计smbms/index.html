@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Java代码审计smbms | 果汁天下苏&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="SMBMS代码审计 1. xss漏洞 先知社区-知识来源 这个xss在head.jsp文件的标签里，获取了请求头的Referer参数在前端显示了 可以使用payload进行闭合操作，进行闭合操作 &#34;&gt;&lt;img src=x onerror=alert(1)&gt; 这个payload在应该经过过滤器的时候就被拦截，因为jsp的本质是servlet所以是经过">
+<meta name="author" content="Sulv">
+<link rel="canonical" href="http://guozhi1.github.io/posts/read/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1smbms/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://guozhi1.github.io/img/Q.gif">
+<link rel="icon" type="image/png" sizes="16x16" href="http://guozhi1.github.io/img/Q.gif">
+<link rel="icon" type="image/png" sizes="32x32" href="http://guozhi1.github.io/img/Q.gif">
+<link rel="apple-touch-icon" href="http://guozhi1.github.io/img/Q.gif">
+<link rel="mask-icon" href="http://guozhi1.github.io/img/Q.gif">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script defer src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="Java代码审计smbms" />
+<meta property="og:description" content="SMBMS代码审计 1. xss漏洞 先知社区-知识来源 这个xss在head.jsp文件的标签里，获取了请求头的Referer参数在前端显示了 可以使用payload进行闭合操作，进行闭合操作 &#34;&gt;&lt;img src=x onerror=alert(1)&gt; 这个payload在应该经过过滤器的时候就被拦截，因为jsp的本质是servlet所以是经过" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://guozhi1.github.io/posts/read/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1smbms/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-05-14T16:56:09+08:00" />
+<meta property="article:modified_time" content="2023-05-14T16:56:09+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Java代码审计smbms"/>
+<meta name="twitter:description" content="SMBMS代码审计 1. xss漏洞 先知社区-知识来源 这个xss在head.jsp文件的标签里，获取了请求头的Referer参数在前端显示了 可以使用payload进行闭合操作，进行闭合操作 &#34;&gt;&lt;img src=x onerror=alert(1)&gt; 这个payload在应该经过过滤器的时候就被拦截，因为jsp的本质是servlet所以是经过"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "📚文章",
+          "item": "http://guozhi1.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  3 ,
+          "name": "📕 阅读",
+          "item": "http://guozhi1.github.io/posts/read/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  4 ,
+      "name": "Java代码审计smbms",
+      "item": "http://guozhi1.github.io/posts/read/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1smbms/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Java代码审计smbms",
+  "name": "Java代码审计smbms",
+  "description": "SMBMS代码审计 1. xss漏洞 先知社区-知识来源 这个xss在head.jsp文件的标签里，获取了请求头的Referer参数在前端显示了 可以使用payload进行闭合操作，进行闭合操作 \u0026#34;\u0026gt;\u0026lt;img src=x onerror=alert(1)\u0026gt; 这个payload在应该经过过滤器的时候就被拦截，因为jsp的本质是servlet所以是经过",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "SMBMS代码审计 1. xss漏洞 先知社区-知识来源\n这个xss在head.jsp文件的标签里，获取了请求头的Referer参数在前端显示了 可以使用payload进行闭合操作，进行闭合操作\n\"\u003e 这个payload在应该经过过滤器的时候就被拦截，因为jsp的本质是servlet所以是经过后端的但是过滤器没有进行拦截。\n1.1 xss漏洞 在找xss漏洞的时候可以先查看回显处 找到了键与值 全局搜索这个键 找到了方法名和变量名 再看看这变量做了什么 关联了键与值的关系然后发送到billlist.jsp现在就找query这个方法的所属类然后请求这个模块就行了 在全局搜索下这个请求的方法 首先需要是GET，参数是method值是query 可以先构造payload了\n请求方式+路径+方法名+值+键+payload GET /网站根目录/jsp/bill.do?method=query\u0026queryProductName=\"\u003e 1.3 存储xss漏洞 先找到回显位置 再找到这个方法 可以看到提交，方式方法 在初始化了Bill()，并且把billcode设置成bill()私有的成员变量，而且是String类型可以输入数据 然后就是初始化数据库class然后添加数据。 BillServiceImpl()调用了dao层的BillDaoImpl()。启用了预编译的功能，现在需要确保这个smbms_bill表的billcode输入的不是int类型数据就可以进行xss注入了 输入的字符类型,但是只能输入长度是20的payload 漏洞复现 危害没多大就写出来图一乐吧。 因为payload长度的变化如果直接闭合标签的话就会长度不够导致失败，所以要找新的可以触发html事件的xss位置，全局搜索找到。 触发事件可以节省payload 然后寻找提交方。显然GET\\POST都行，反正都会调用doGET()。我建议使用网页提交因为参数很多，而且有缺少的参数就会报错。\nprotected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException { String method = req.getParameter(\"method\"); if(method != null \u0026\u0026 method.equals(\"query\")){ this.query(req,resp); }else if(method != null \u0026\u0026 method.equals(\"add\")){ this.add(req,resp); }else if(method != null \u0026\u0026 method.equals(\"view\")){ this.getBillById(req,resp,\"billview.jsp\"); }else if(method != null \u0026\u0026 method.equals(\"modify\")){ this.getBillById(req,resp,\"billmodify.jsp\"); }else if(method != null \u0026\u0026 method.equals(\"modifysave\")){ this.modify(req,resp); }else if(method != null \u0026\u0026 method.equals(\"delbill\")){ this.delBill(req,resp); }else if(method != null \u0026\u0026 method.equals(\"getproviderlist\")){ this.getProviderlist(req,resp); } } @Override protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException { doGet(req, resp); } \"\"+onclick=alert(1)\u003e 2、密码重置漏洞 分析下修改密码的方法 注意三个点，第一是通过session来判断用户的，第二数据包里收一个值newpassword，第三newpassword不为空就可以影响flag的判断并影响最结果。 显然如果是修改自己的密码就太鸡肋了，可以看到数据包没有token，我们可以使用csrf提升危害。 知识星球 ",
+  "wordCount" : "1055",
+  "inLanguage": "en",
+  "datePublished": "2023-05-14T16:56:09+08:00",
+  "dateModified": "2023-05-14T16:56:09+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Sulv"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://guozhi1.github.io/posts/read/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1smbms/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "果汁天下苏's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://guozhi1.github.io/img/Q.gif"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://guozhi1.github.io" accesskey="h" title="果汁天下苏 (Alt + H)">
+            <img src="http://guozhi1.github.io/img/Q.gif" alt="logo" aria-label="logo"
+                 height="35">果汁天下苏</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://guozhi1.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="http://guozhi1.github.io">🏠 主页</a>&nbsp;»&nbsp;<a href="http://guozhi1.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="http://guozhi1.github.io/posts/read/">📕 阅读</a></div>
+            <h1 class="post-title">
+                Java代码审计smbms
+            </h1>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-05-14
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>1055字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>3分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>Sulv
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+                <a href="http://guozhi1.github.io/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="color: var(--secondary)!important;">代码审计</a>
+                &nbsp;<a href="http://guozhi1.github.io/tags/java/" style="color: var(--secondary)!important;">java</a>
+                &nbsp;<a href="http://guozhi1.github.io/tags/%E5%9F%BA%E7%A1%80/" style="color: var(--secondary)!important;">基础</a>
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "http://guozhi1.github.io"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">文章目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#smbms%e4%bb%a3%e7%a0%81%e5%ae%a1%e8%ae%a1" aria-label="SMBMS代码审计">SMBMS代码审计</a><ul>
+                        <ul>
+                        
+                <li>
+                    <a href="#1-xss%e6%bc%8f%e6%b4%9e" aria-label="1. xss漏洞">1. xss漏洞</a></li>
+                <li>
+                    <a href="#11-xss%e6%bc%8f%e6%b4%9e" aria-label="1.1 xss漏洞">1.1 xss漏洞</a></li>
+                <li>
+                    <a href="#13-%e5%ad%98%e5%82%a8xss%e6%bc%8f%e6%b4%9e" aria-label="1.3 存储xss漏洞">1.3 存储xss漏洞</a><ul>
+                        
+                <li>
+                    <a href="#%e6%bc%8f%e6%b4%9e%e5%a4%8d%e7%8e%b0" aria-label="漏洞复现">漏洞复现</a></li></ul>
+                </li>
+                <li>
+                    <a href="#2%e5%af%86%e7%a0%81%e9%87%8d%e7%bd%ae%e6%bc%8f%e6%b4%9e" aria-label="2、密码重置漏洞">2、密码重置漏洞</a></li></ul>
+                    
+                <li>
+                    <a href="#%e7%9f%a5%e8%af%86%e6%98%9f%e7%90%83" aria-label="知识星球"><strong>知识星球</strong></a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h1 id="smbms代码审计">SMBMS代码审计<a hidden class="anchor" aria-hidden="true" href="#smbms代码审计">#</a></h1>
+<h3 id="1-xss漏洞">1. xss漏洞<a hidden class="anchor" aria-hidden="true" href="#1-xss漏洞">#</a></h3>
+<p><a href="https://xz.aliyun.com/t/12226">先知社区-知识来源</a></p>
+<p>这个xss在head.jsp文件的标签里，获取了请求头的Referer参数在前端显示了
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230514181745.png" alt=""  />
+
+可以使用payload进行闭合操作，进行闭合操作</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>&#34;&gt;&lt;img src=x onerror=alert(1)&gt;
+</span></span></code></pre></div><p>这个payload在应该经过过滤器的时候就被拦截，因为jsp的本质是servlet所以是经过后端的但是过滤器没有进行拦截。</p>
+<h3 id="11-xss漏洞">1.1 xss漏洞<a hidden class="anchor" aria-hidden="true" href="#11-xss漏洞">#</a></h3>
+<p>在找xss漏洞的时候可以先查看回显处
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230515195845.png" alt=""  />
+
+找到了键与值 全局搜索这个键
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230515195803.png" alt=""  />
+
+找到了方法名和变量名
+再看看这变量做了什么
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230515201038.png" alt=""  />
+
+关联了键与值的关系然后发送到<code>billlist.jsp</code>现在就找query这个方法的所属类然后请求这个模块就行了
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230515201354.png" alt=""  />
+
+在全局搜索下这个请求的方法
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230515201803.png" alt="Alternate"  />
+
+首先需要是GET，参数是<code>method</code>值是<code>query</code>
+可以先构造payload了</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>    请求方式+路径+方法名+值+键+payload
+</span></span><span style="display:flex;"><span>    GET /网站根目录/jsp/bill.do?method=query&amp;queryProductName=&#34;&gt;&lt;img src=x onerror=alert(1)&gt;
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230515203336.png" alt="Alternate"  />
+</p>
+<h3 id="13-存储xss漏洞">1.3 存储xss漏洞<a hidden class="anchor" aria-hidden="true" href="#13-存储xss漏洞">#</a></h3>
+<p>先找到回显位置
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230516151036.png" alt="Alternate"  />
+
+再找到这个方法
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230516151443.png" alt="Alternate"  />
+
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230516152201.png" alt="Alternate"  />
+
+可以看到提交，方式方法
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230516152357.png" alt="Alternate "  />
+
+在初始化了Bill()，并且把billcode设置成bill()私有的成员变量，而且是String类型可以输入数据
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230516152721.png" alt="Alternate "  />
+
+然后就是初始化数据库class然后添加数据。
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230516153039.png" alt="Alternate "  />
+
+<code>BillServiceImpl()</code>调用了<code>dao</code>层的<code>BillDaoImpl()</code>。启用了预编译的功能，现在需要确保这个<code>smbms_bill</code>表的<code>billcode</code>输入的不是int类型数据就可以进行xss注入了
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230516153341.png" alt="Alternate"  />
+
+输入的字符类型,但是只能输入长度是20的payload
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230516153748.png" alt="Alternate "  />
+</p>
+<h4 id="漏洞复现">漏洞复现<a hidden class="anchor" aria-hidden="true" href="#漏洞复现">#</a></h4>
+<p>危害没多大就写出来图一乐吧。
+因为payload长度的变化如果直接闭合标签的话就会长度不够导致失败，所以要找新的可以触发html事件的xss位置，全局搜索找到<code>&lt;a标签&gt;</code>。
+触发事件可以节省payload
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230516154513.png" alt="Alternate"  />
+
+然后寻找提交方。显然GET\POST都行，反正都会调用<code>doGET()</code>。我建议使用网页提交因为参数很多，而且有缺少的参数就会报错。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doGet</span><span style="color:#f92672">(</span>HttpServletRequest req<span style="color:#f92672">,</span> HttpServletResponse resp<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> ServletException<span style="color:#f92672">,</span> IOException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        String method <span style="color:#f92672">=</span> req<span style="color:#f92672">.</span><span style="color:#a6e22e">getParameter</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;method&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>method <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;query&#34;</span><span style="color:#f92672">)){</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">query</span><span style="color:#f92672">(</span>req<span style="color:#f92672">,</span>resp<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span><span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>method <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;add&#34;</span><span style="color:#f92672">)){</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>req<span style="color:#f92672">,</span>resp<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span><span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>method <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;view&#34;</span><span style="color:#f92672">)){</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getBillById</span><span style="color:#f92672">(</span>req<span style="color:#f92672">,</span>resp<span style="color:#f92672">,</span><span style="color:#e6db74">&#34;billview.jsp&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span><span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>method <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;modify&#34;</span><span style="color:#f92672">)){</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getBillById</span><span style="color:#f92672">(</span>req<span style="color:#f92672">,</span>resp<span style="color:#f92672">,</span><span style="color:#e6db74">&#34;billmodify.jsp&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span><span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>method <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;modifysave&#34;</span><span style="color:#f92672">)){</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">modify</span><span style="color:#f92672">(</span>req<span style="color:#f92672">,</span>resp<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span><span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>method <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;delbill&#34;</span><span style="color:#f92672">)){</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">delBill</span><span style="color:#f92672">(</span>req<span style="color:#f92672">,</span>resp<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span><span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>method <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;getproviderlist&#34;</span><span style="color:#f92672">)){</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getProviderlist</span><span style="color:#f92672">(</span>req<span style="color:#f92672">,</span>resp<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doPost</span><span style="color:#f92672">(</span>HttpServletRequest req<span style="color:#f92672">,</span> HttpServletResponse resp<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> ServletException<span style="color:#f92672">,</span> IOException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        doGet<span style="color:#f92672">(</span>req<span style="color:#f92672">,</span> resp<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>&#34;&#34;+onclick=alert(1)&gt;
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230516163302.png" alt=""  />
+
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230516163219.png" alt=""  />
+</p>
+<h3 id="2密码重置漏洞">2、密码重置漏洞<a hidden class="anchor" aria-hidden="true" href="#2密码重置漏洞">#</a></h3>
+<p>分析下修改密码的方法
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230516171017.png" alt=""  />
+
+注意三个点，第一是通过session来判断用户的，第二数据包里收一个值newpassword，第三newpassword不为空就可以影响flag的判断并影响最结果。
+显然如果是修改自己的密码就太鸡肋了，可以看到数据包没有token，我们可以使用csrf提升危害。
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230516172200.png" alt=""  />
+
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230516172143.png" alt=""  />
+
+<img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/20230516172233.png" alt=""  />
+</p>
+<hr>
+<h2 id="知识星球"><strong>知识星球</strong><a hidden class="anchor" aria-hidden="true" href="#知识星球">#</a></h2>
+<p><img loading="lazy" src="https://cdn.staticaly.com/gh/guozhi1/blogcdn@master/img/%E7%9F%A5%E8%AF%86%E6%98%9F%E7%90%83%E5%85%A5%E5%8F%A3.png" alt=""  />
+</p>
+
+
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="http://guozhi1.github.io/posts/read/oasys%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>Oasys代码审计</span>
+  </a>
+  <a class="next" href="http://guozhi1.github.io/posts/tech/src%E6%8C%96%E6%8E%98-xss%E6%BC%8F%E6%B4%9E/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>Src挖掘 Xss漏洞</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2023
+        <a href="http://guozhi1.github.io" style="color:#939393;">果汁天下苏&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"果汁天下苏's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"果汁天下苏's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"果汁天下苏's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+
+<script>
+    $("code[class^=language] ").on("mouseover", function () {
+        if (this.clientWidth < this.scrollWidth) {
+            $(this).css("width", "135%")
+            $(this).css("border-top-right-radius", "var(--radius)")
+        }
+    }).on("mouseout", function () {
+        $(this).css("width", "100%")
+        $(this).css("border-top-right-radius", "unset")
+    })
+</script>
+</body>
+
+</html>

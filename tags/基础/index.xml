@@ -9,28 +9,28 @@
     <lastBuildDate>Sun, 14 May 2023 16:56:09 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/tags/%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Java代码审计smbms</title>
-      <link>http://guozhi1.github.io/posts/tech/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1smbms/</link>
+      <link>http://guozhi1.github.io/posts/read/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1smbms/</link>
       <pubDate>Sun, 14 May 2023 16:56:09 +0800</pubDate>
       
-      <guid>http://guozhi1.github.io/posts/tech/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1smbms/</guid>
+      <guid>http://guozhi1.github.io/posts/read/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1smbms/</guid>
       <description>SMBMS代码审计 1. xss漏洞 先知社区-知识来源 这个xss在head.jsp文件的标签里，获取了请求头的Referer参数在前端显示了 可以使用payload进行闭合操作，进行闭合操作 &amp;#34;&amp;gt;&amp;lt;img src=x onerror=alert(1)&amp;gt; 这个payload在应该经过过滤器的时候就被拦截，因为jsp的本质是servlet所以是经过</description>
     </item>
     
     <item>
       <title>32位逆向技术</title>
-      <link>http://guozhi1.github.io/posts/tech/32%E4%BD%8D%E9%80%86%E5%90%91%E6%8A%80%E6%9C%AF/</link>
+      <link>http://guozhi1.github.io/posts/blog/32%E4%BD%8D%E9%80%86%E5%90%91%E6%8A%80%E6%9C%AF/</link>
       <pubDate>Sat, 15 Apr 2023 15:02:44 +0800</pubDate>
       
-      <guid>http://guozhi1.github.io/posts/tech/32%E4%BD%8D%E9%80%86%E5%90%91%E6%8A%80%E6%9C%AF/</guid>
+      <guid>http://guozhi1.github.io/posts/blog/32%E4%BD%8D%E9%80%86%E5%90%91%E6%8A%80%E6%9C%AF/</guid>
       <description>前言 知识来源：《加密与解密》 第一章启动函数 Windows程序在按顺序执行时不是直接从WinMain函数开始的,而是执行别的函数进行初始化,之后调用WinMain函数 （选择WinMain,交叉引用就可以找到上一级） 第二章函数 1. 识别函数 编译器都会使用call与ret指令来进行函数的调</description>
     </item>
     
     <item>
       <title>逆向基础-调用约定</title>
-      <link>http://guozhi1.github.io/posts/tech/%E9%80%86%E5%90%91%E5%9F%BA%E7%A1%80/</link>
+      <link>http://guozhi1.github.io/posts/blog/%E9%80%86%E5%90%91%E5%9F%BA%E7%A1%80/</link>
       <pubDate>Tue, 11 Apr 2023 12:08:52 +0800</pubDate>
       
-      <guid>http://guozhi1.github.io/posts/tech/%E9%80%86%E5%90%91%E5%9F%BA%E7%A1%80/</guid>
+      <guid>http://guozhi1.github.io/posts/blog/%E9%80%86%E5%90%91%E5%9F%BA%E7%A1%80/</guid>
       <description>调用约定 知识来源 允许使用VARARG：表示参数个数可以是不确定 约定类型 _cdecl(C类规范) pascal stdcall Fastcall 参数传递 从右到左 从左到右 从右到左 寄存器传参与栈 平衡者 调用者 子程序 子程序 子程序 允许使用VARARG 是 否 否 x86 下的调用约定 _cdecl,_stdcall,_fastcall int Test(int a,int b,int c,int d,int e) { return a + b + c + d + e; } int main() { Test(1,2,3,4,5); } _cdecl C++下的默</description>
     </item>
     

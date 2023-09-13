@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>DLL劫持技术 | 果汁天下苏&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="DLL劫持技术 1、介绍 DLL劫持技术是一种权限维持的手段， 通过劫持正常程序DLL的执行流让程序执行恶意代码。 流程 正常程序 &mdash;-调用&mdash;-&raquo; 正常的DLL &mdash;-执行&mdash;&raquo; 正常功能 DLL劫持就可以通过劫持正常的DLL, 让恶">
+<meta name="author" content="果汁天下苏">
+<link rel="canonical" href="http://guozhi1.github.io/posts/tech/dll%E5%8A%AB%E6%8C%81%E6%8A%80%E6%9C%AF/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://guozhi1.github.io/img/Q.gif">
+<link rel="icon" type="image/png" sizes="16x16" href="http://guozhi1.github.io/img/Q.gif">
+<link rel="icon" type="image/png" sizes="32x32" href="http://guozhi1.github.io/img/Q.gif">
+<link rel="apple-touch-icon" href="http://guozhi1.github.io/img/Q.gif">
+<link rel="mask-icon" href="http://guozhi1.github.io/img/Q.gif">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script defer src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="DLL劫持技术" />
+<meta property="og:description" content="DLL劫持技术 1、介绍 DLL劫持技术是一种权限维持的手段， 通过劫持正常程序DLL的执行流让程序执行恶意代码。 流程 正常程序 &mdash;-调用&mdash;-&raquo; 正常的DLL &mdash;-执行&mdash;&raquo; 正常功能 DLL劫持就可以通过劫持正常的DLL, 让恶" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://guozhi1.github.io/posts/tech/dll%E5%8A%AB%E6%8C%81%E6%8A%80%E6%9C%AF/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-09-11T14:46:30+08:00" />
+<meta property="article:modified_time" content="2023-09-11T14:46:30+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="DLL劫持技术"/>
+<meta name="twitter:description" content="DLL劫持技术 1、介绍 DLL劫持技术是一种权限维持的手段， 通过劫持正常程序DLL的执行流让程序执行恶意代码。 流程 正常程序 &mdash;-调用&mdash;-&raquo; 正常的DLL &mdash;-执行&mdash;&raquo; 正常功能 DLL劫持就可以通过劫持正常的DLL, 让恶"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "📚文章",
+          "item": "http://guozhi1.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  3 ,
+          "name": "👨🏻‍💻 技术",
+          "item": "http://guozhi1.github.io/posts/tech/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  4 ,
+      "name": "DLL劫持技术",
+      "item": "http://guozhi1.github.io/posts/tech/dll%E5%8A%AB%E6%8C%81%E6%8A%80%E6%9C%AF/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "DLL劫持技术",
+  "name": "DLL劫持技术",
+  "description": "DLL劫持技术 1、介绍 DLL劫持技术是一种权限维持的手段， 通过劫持正常程序DLL的执行流让程序执行恶意代码。 流程 正常程序 \u0026mdash;-调用\u0026mdash;-\u0026raquo; 正常的DLL \u0026mdash;-执行\u0026mdash;\u0026raquo; 正常功能 DLL劫持就可以通过劫持正常的DLL, 让恶",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "DLL劫持技术 1、介绍 DLL劫持技术是一种权限维持的手段， 通过劫持正常程序DLL的执行流让程序执行恶意代码。\n流程\n正常程序 —-调用—-» 正常的DLL —-执行—» 正常功能 DLL劫持就可以通过劫持正常的DLL, 让恶意的DLL被正常的程序调用。\n正常程序 —-调用—-» 恶意DLL — 执行 —» 恶意代码 —转发—» 正常DLL —执行—» 执行正常功能 2、DLL介绍 DLL中文名动态链接库 你可以把它看作一个自身无法执行的exe程序通过exe对DLL操作调用DLL里的方法实现相对应的功能\n学DLL劫持就学两点就行\nDLL生命周期 DLL导出函数 2.1、 DLL生命周期 DLL生命周期是指DLL从加载到卸载的个个状态，下面看代码DLL默认就是\n#include \"pch.h\" BOOL APIENTRY DllMain( HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved ) //DLL的入口函数 { switch (ul_reason_for_call) { case DLL_PROCESS_ATTACH: //DLL被加载时候执行 case DLL_THREAD_ATTACH: //线程被创建的时候执行 case DLL_THREAD_DETACH: //线程结束时执行 case DLL_PROCESS_DETACH: //DLL被卸载时执行 break; } return TRUE; } 这就是DLL的生命周期 执行到对应的生命周期会执行对应的case代码块\n2.2、DLL导出函数 DLL导出函数是DLL提供对外部的函数， 外部的程序可以通过加载DLL访问导出函数从而执行导出函数的功能。\n这是DLL里的导出函数\n//语言类型 调用约定 extern \"C\" __declspec(dllexport) void aaa() { MessageBoxA(NULL,\"我是导出函数\", \"aaaa\", MB_OK); } 完整的DLL代码\n// dllmain.cpp : 定义 DLL 应用程序的入口点。 #include \"pch.h\" #include #include #include extern \"C\" __declspec(dllexport) void aaa() { MessageBoxA(NULL,\"我是导出函数\", \"aaaa\", MB_OK); } BOOL APIENTRY DllMain( HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved ) { switch (ul_reason_for_call) { case DLL_PROCESS_ATTACH: MessageBoxA(NULL, \"DLL加载case\", \"aaa\", MB_HELP); break; case DLL_THREAD_ATTACH: case DLL_THREAD_DETACH: case DLL_PROCESS_DETACH: break; } return TRUE; } 写一个程序调用DLL文件\n#include #include typedef void(*Func)(); //DLL中的函数被默认为私有函数，不会被其他程序调用。因此，需要通过定义导出函数以便其他程序能够调用它们。 int main() { HINSTANCE hinst = LoadLibraryA(\"TestDLL.dll\"); //执行到这的时候会调用 MessageBoxA(NULL, \"DLL加载case\", \"aaa\", MB_HELP); Func GetDLLFunc = (Func)GetProcAddress(hinst, \"aaa\"); GetDLLFunc(); //执行到这执行导出函数 MessageBoxA(NULL,\"我是导出函数\", \"aaaa\", MB_OK); return 0; } ",
+  "wordCount" : "933",
+  "inLanguage": "en",
+  "datePublished": "2023-09-11T14:46:30+08:00",
+  "dateModified": "2023-09-11T14:46:30+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "果汁天下苏"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://guozhi1.github.io/posts/tech/dll%E5%8A%AB%E6%8C%81%E6%8A%80%E6%9C%AF/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "果汁天下苏's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://guozhi1.github.io/img/Q.gif"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://guozhi1.github.io" accesskey="h" title="果汁天下苏 (Alt + H)">
+            <img src="http://guozhi1.github.io/img/Q.gif" alt="logo" aria-label="logo"
+                 height="35">果汁天下苏</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://guozhi1.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="http://guozhi1.github.io">🏠 主页</a>&nbsp;»&nbsp;<a href="http://guozhi1.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="http://guozhi1.github.io/posts/tech/">👨🏻‍💻 技术</a></div>
+            <h1 class="post-title">
+                DLL劫持技术
+            </h1>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-09-11
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>933字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>2分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>果汁天下苏
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "http://guozhi1.github.io"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">文章目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#dll%e5%8a%ab%e6%8c%81%e6%8a%80%e6%9c%af" aria-label="DLL劫持技术">DLL劫持技术</a><ul>
+                        
+                <li>
+                    <a href="#1%e4%bb%8b%e7%bb%8d" aria-label="1、介绍">1、介绍</a></li>
+                <li>
+                    <a href="#2dll%e4%bb%8b%e7%bb%8d" aria-label="2、DLL介绍">2、DLL介绍</a><ul>
+                        
+                <li>
+                    <a href="#21-dll%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f" aria-label="2.1、 DLL生命周期">2.1、 DLL生命周期</a></li>
+                <li>
+                    <a href="#22dll%e5%af%bc%e5%87%ba%e5%87%bd%e6%95%b0" aria-label="2.2、DLL导出函数">2.2、DLL导出函数</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h2 id="dll劫持技术">DLL劫持技术<a hidden class="anchor" aria-hidden="true" href="#dll劫持技术">#</a></h2>
+<h3 id="1介绍">1、介绍<a hidden class="anchor" aria-hidden="true" href="#1介绍">#</a></h3>
+<p>DLL劫持技术是一种权限维持的手段， 通过劫持正常程序DLL的执行流让程序执行恶意代码。</p>
+<p>流程</p>
+<ol>
+<li>正常程序 &mdash;-调用&mdash;-&raquo; 正常的DLL &mdash;-执行&mdash;&raquo; 正常功能</li>
+</ol>
+<p>DLL劫持就可以通过劫持正常的DLL, 让恶意的DLL被正常的程序调用。</p>
+<ol start="2">
+<li>正常程序 &mdash;-调用&mdash;-&raquo; 恶意DLL &mdash; 执行 &mdash;&raquo; 恶意代码 &mdash;转发&mdash;&raquo; 正常DLL &mdash;执行&mdash;&raquo; 执行正常功能</li>
+</ol>
+<h3 id="2dll介绍">2、DLL介绍<a hidden class="anchor" aria-hidden="true" href="#2dll介绍">#</a></h3>
+<p>DLL中文名动态链接库 你可以把它看作一个自身无法执行的exe程序通过exe对DLL操作调用DLL里的方法实现相对应的功能<br>
+学DLL劫持就学两点就行</p>
+<ol>
+<li>DLL生命周期</li>
+<li>DLL导出函数</li>
+</ol>
+<h4 id="21-dll生命周期">2.1、 DLL生命周期<a hidden class="anchor" aria-hidden="true" href="#21-dll生命周期">#</a></h4>
+<p>DLL生命周期是指DLL从加载到卸载的个个状态，下面看代码DLL默认就是</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;pch.h&#34;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>BOOL APIENTRY <span style="color:#a6e22e">DllMain</span>( HMODULE hModule,
+</span></span><span style="display:flex;"><span> DWORD ul_reason_for_call,
+</span></span><span style="display:flex;"><span> LPVOID lpReserved
+</span></span><span style="display:flex;"><span> ) <span style="color:#75715e">//DLL的入口函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>{
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">switch</span> (ul_reason_for_call)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">case</span> DLL_PROCESS_ATTACH: <span style="color:#75715e">//DLL被加载时候执行
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span> <span style="color:#66d9ef">case</span> DLL_THREAD_ATTACH: <span style="color:#75715e">//线程被创建的时候执行
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span> <span style="color:#66d9ef">case</span> DLL_THREAD_DETACH: <span style="color:#75715e">//线程结束时执行
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span> <span style="color:#66d9ef">case</span> DLL_PROCESS_DETACH: <span style="color:#75715e">//DLL被卸载时执行
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span> <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">return</span> TRUE;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这就是DLL的生命周期 执行到对应的生命周期会执行对应的case代码块</p>
+<h4 id="22dll导出函数">2.2、DLL导出函数<a hidden class="anchor" aria-hidden="true" href="#22dll导出函数">#</a></h4>
+<p>DLL导出函数是DLL提供对外部的函数， 外部的程序可以通过加载DLL访问导出函数从而执行导出函数的功能。</p>
+<p>这是DLL里的导出函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span><span style="color:#75715e">//语言类型    调用约定                
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> <span style="color:#66d9ef">__declspec</span>(dllexport) <span style="color:#66d9ef">void</span> aaa()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    MessageBoxA(NULL,<span style="color:#e6db74">&#34;我是导出函数&#34;</span>, <span style="color:#e6db74">&#34;aaaa&#34;</span>, MB_OK);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>完整的DLL代码</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span><span style="color:#75715e">// dllmain.cpp : 定义 DLL 应用程序的入口点。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;pch.h&#34;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;Windows.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> <span style="color:#66d9ef">__declspec</span>(dllexport) <span style="color:#66d9ef">void</span> aaa()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    MessageBoxA(NULL,<span style="color:#e6db74">&#34;我是导出函数&#34;</span>, <span style="color:#e6db74">&#34;aaaa&#34;</span>, MB_OK);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>BOOL APIENTRY <span style="color:#a6e22e">DllMain</span>( HMODULE hModule,
+</span></span><span style="display:flex;"><span>                       DWORD  ul_reason_for_call,
+</span></span><span style="display:flex;"><span>                       LPVOID lpReserved
+</span></span><span style="display:flex;"><span>                     )
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">switch</span> (ul_reason_for_call)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">case</span> DLL_PROCESS_ATTACH:
+</span></span><span style="display:flex;"><span>        MessageBoxA(NULL, <span style="color:#e6db74">&#34;DLL加载case&#34;</span>, <span style="color:#e6db74">&#34;aaa&#34;</span>, MB_HELP);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">case</span> DLL_THREAD_ATTACH:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">case</span> DLL_THREAD_DETACH:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">case</span> DLL_PROCESS_DETACH:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> TRUE;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>写一个程序调用DLL文件</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;Windows.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">typedef</span> <span style="color:#a6e22e">void</span>(<span style="color:#f92672">*</span>Func)(); <span style="color:#75715e">//DLL中的函数被默认为私有函数，不会被其他程序调用。因此，需要通过定义导出函数以便其他程序能够调用它们。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	HINSTANCE hinst  <span style="color:#f92672">=</span> LoadLibraryA(<span style="color:#e6db74">&#34;TestDLL.dll&#34;</span>); <span style="color:#75715e">//执行到这的时候会调用 MessageBoxA(NULL, &#34;DLL加载case&#34;, &#34;aaa&#34;, MB_HELP);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	Func GetDLLFunc <span style="color:#f92672">=</span> (Func)GetProcAddress(hinst, <span style="color:#e6db74">&#34;aaa&#34;</span>);
+</span></span><span style="display:flex;"><span>	GetDLLFunc(); <span style="color:#75715e">//执行到这执行导出函数 MessageBoxA(NULL,&#34;我是导出函数&#34;, &#34;aaaa&#34;, MB_OK);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>; 
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
+
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="next" href="http://guozhi1.github.io/posts/read/java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1jspxcms/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>Java代码审计jspxcms</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2023
+        <a href="http://guozhi1.github.io" style="color:#939393;">果汁天下苏&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"果汁天下苏's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"果汁天下苏's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"果汁天下苏's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+
+<script>
+    $("code[class^=language] ").on("mouseover", function () {
+        if (this.clientWidth < this.scrollWidth) {
+            $(this).css("width", "135%")
+            $(this).css("border-top-right-radius", "var(--radius)")
+        }
+    }).on("mouseout", function () {
+        $(this).css("width", "100%")
+        $(this).css("border-top-right-radius", "unset")
+    })
+</script>
+</body>
+
+</html>

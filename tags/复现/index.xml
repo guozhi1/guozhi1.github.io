@@ -9,10 +9,10 @@
     <lastBuildDate>Mon, 22 May 2023 15:54:16 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/tags/%E5%A4%8D%E7%8E%B0/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Oasys代码审计</title>
-      <link>http://guozhi1.github.io/posts/tech/oasys%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</link>
+      <link>http://guozhi1.github.io/posts/read/oasys%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</link>
       <pubDate>Mon, 22 May 2023 15:54:16 +0800</pubDate>
       
-      <guid>http://guozhi1.github.io/posts/tech/oasys%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</guid>
+      <guid>http://guozhi1.github.io/posts/read/oasys%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</guid>
       <description>OAsys代码审计 知识来源 1. sql注入 全局搜索可以注入的地方${可以找到sql注入的地方。#{}是预编译不可以进行注入的。 做了一个简单的判断然后进行拼接操作。 这个语句的id是sortMyNotice（我没截进去） 然后在这个所属的类 在cn.gson.oasys.mappers这个包</description>
     </item>
     
