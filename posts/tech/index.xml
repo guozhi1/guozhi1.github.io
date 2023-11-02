@@ -6,7 +6,52 @@
     <description>Recent content in 👨🏻‍💻 技术 on 果汁天下苏&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 11 Sep 2023 14:46:30 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/posts/tech/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 30 Oct 2023 09:38:50 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/posts/tech/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Proxy代理编写</title>
+      <link>http://guozhi1.github.io/posts/tech/proxy%E4%BB%A3%E7%90%86%E7%BC%96%E5%86%99/</link>
+      <pubDate>Mon, 30 Oct 2023 09:38:50 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/proxy%E4%BB%A3%E7%90%86%E7%BC%96%E5%86%99/</guid>
+      <description>proxy从互联网收集代理的编写 借鉴的代码SmallProxyPool 一、代码的结构 我在分析SmallProxyPool代码之后找到了几个基础的结构用这些基础的结构就可以编写一个手机互联网代理的工具 收集模块 通过Fofa搜索到互联网上的Sockt5资产 检测模块 通过检测看什么Sock</description>
+    </item>
+    
+    <item>
+      <title>补丁技术</title>
+      <link>http://guozhi1.github.io/posts/tech/%E8%A1%A5%E4%B8%81%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Sat, 21 Oct 2023 13:03:13 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/%E8%A1%A5%E4%B8%81%E6%8A%80%E6%9C%AF/</guid>
+      <description>补丁技术 逆向工程中，经常需改更改程序的原有执行流程，使其增加或减少一些功能代码。这就需要给原有的文件添加补丁。 补丁分为两种文件补丁和内存补丁，文件补丁修改文件本身的某个数据，内存补丁是在内存中修改数据。 1.文件补丁 文件补丁直接对二进制可执行文件进行修改使其满足需求。文件补丁实现很</description>
+    </item>
+    
+    <item>
+      <title>Jwt漏洞学习</title>
+      <link>http://guozhi1.github.io/posts/tech/jwt%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0/</link>
+      <pubDate>Tue, 17 Oct 2023 10:43:05 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/jwt%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0/</guid>
+      <description>知识文献 1.JWT介绍 jwt是一种用于身份验证和授权的开放标准,通过网络应用间的传递加密的json。jwt的攻击途径有例如：特权升级、信息泄露、sqli , xss, ssrf,rce, LFI等。 2.基础概念 JWS: singed jwt 签名过的jwt JWK: JWT的密钥，常说的的SECRET JWE: encrypted JWT的部分payload经过加密的JW</description>
+    </item>
+    
+    <item>
+      <title>二次开发</title>
+      <link>http://guozhi1.github.io/posts/tech/%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91/</link>
+      <pubDate>Thu, 12 Oct 2023 14:29:40 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91/</guid>
+      <description>1.数据对齐 数据对齐cpu的结构一部分, 对齐可以提升执行效率，当数据大小的数据模数的内存地址是0的时候，数据是对齐的。例如 word值总是能被2除尽的地方开始，而dword值总是被4除尽的地方开始， x86可以对未对其的数据进行调整，但是代价是cpu的资源。 在windows中</description>
+    </item>
+    
+    <item>
+      <title>Hook技术</title>
+      <link>http://guozhi1.github.io/posts/tech/hook%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Wed, 11 Oct 2023 17:02:48 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/hook%E6%8A%80%E6%9C%AF/</guid>
+      <description>1. Hook技术 hook的手段就是“钩住”关心的程序流并 并根据需要进行干预的动作 1.1 IAT HOOK篡改MessageBox消息</description>
+    </item>
+    
     <item>
       <title>DLL劫持技术</title>
       <link>http://guozhi1.github.io/posts/tech/dll%E5%8A%AB%E6%8C%81%E6%8A%80%E6%9C%AF/</link>

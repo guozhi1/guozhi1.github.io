@@ -6,7 +6,61 @@
     <description>Recent content on 果汁天下苏&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 11 Sep 2023 14:46:30 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 30 Oct 2023 09:38:50 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Proxy代理编写</title>
+      <link>http://guozhi1.github.io/posts/tech/proxy%E4%BB%A3%E7%90%86%E7%BC%96%E5%86%99/</link>
+      <pubDate>Mon, 30 Oct 2023 09:38:50 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/proxy%E4%BB%A3%E7%90%86%E7%BC%96%E5%86%99/</guid>
+      <description>proxy从互联网收集代理的编写 借鉴的代码SmallProxyPool 一、代码的结构 我在分析SmallProxyPool代码之后找到了几个基础的结构用这些基础的结构就可以编写一个手机互联网代理的工具 收集模块 通过Fofa搜索到互联网上的Sockt5资产 检测模块 通过检测看什么Sock</description>
+    </item>
+    
+    <item>
+      <title>Win32调试api</title>
+      <link>http://guozhi1.github.io/posts/blog/win32%E8%B0%83%E8%AF%95api/</link>
+      <pubDate>Sun, 22 Oct 2023 19:13:37 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/blog/win32%E8%B0%83%E8%AF%95api/</guid>
+      <description>Win32调试Api Win32自带了一些api函数，他们相当于调试器的大部分功能，这些函数称为Win32调试Api。 利用这些Api，可以加载一个程序或捆绑到一个正在运行的程序上以供调试。可以获得调试程序底层信息，甚至可以对被调试程序进行任意修改。 1.调试相关函数说明 BOOL ContinueDebugEvent()</description>
+    </item>
+    
+    <item>
+      <title>补丁技术</title>
+      <link>http://guozhi1.github.io/posts/tech/%E8%A1%A5%E4%B8%81%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Sat, 21 Oct 2023 13:03:13 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/%E8%A1%A5%E4%B8%81%E6%8A%80%E6%9C%AF/</guid>
+      <description>补丁技术 逆向工程中，经常需改更改程序的原有执行流程，使其增加或减少一些功能代码。这就需要给原有的文件添加补丁。 补丁分为两种文件补丁和内存补丁，文件补丁修改文件本身的某个数据，内存补丁是在内存中修改数据。 1.文件补丁 文件补丁直接对二进制可执行文件进行修改使其满足需求。文件补丁实现很</description>
+    </item>
+    
+    <item>
+      <title>Jwt漏洞学习</title>
+      <link>http://guozhi1.github.io/posts/tech/jwt%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0/</link>
+      <pubDate>Tue, 17 Oct 2023 10:43:05 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/jwt%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0/</guid>
+      <description>知识文献 1.JWT介绍 jwt是一种用于身份验证和授权的开放标准,通过网络应用间的传递加密的json。jwt的攻击途径有例如：特权升级、信息泄露、sqli , xss, ssrf,rce, LFI等。 2.基础概念 JWS: singed jwt 签名过的jwt JWK: JWT的密钥，常说的的SECRET JWE: encrypted JWT的部分payload经过加密的JW</description>
+    </item>
+    
+    <item>
+      <title>二次开发</title>
+      <link>http://guozhi1.github.io/posts/tech/%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91/</link>
+      <pubDate>Thu, 12 Oct 2023 14:29:40 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91/</guid>
+      <description>1.数据对齐 数据对齐cpu的结构一部分, 对齐可以提升执行效率，当数据大小的数据模数的内存地址是0的时候，数据是对齐的。例如 word值总是能被2除尽的地方开始，而dword值总是被4除尽的地方开始， x86可以对未对其的数据进行调整，但是代价是cpu的资源。 在windows中</description>
+    </item>
+    
+    <item>
+      <title>Hook技术</title>
+      <link>http://guozhi1.github.io/posts/tech/hook%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Wed, 11 Oct 2023 17:02:48 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/hook%E6%8A%80%E6%9C%AF/</guid>
+      <description>1. Hook技术 hook的手段就是“钩住”关心的程序流并 并根据需要进行干预的动作 1.1 IAT HOOK篡改MessageBox消息</description>
+    </item>
+    
     <item>
       <title>DLL劫持技术</title>
       <link>http://guozhi1.github.io/posts/tech/dll%E5%8A%AB%E6%8C%81%E6%8A%80%E6%9C%AF/</link>
@@ -14,15 +68,6 @@
       
       <guid>http://guozhi1.github.io/posts/tech/dll%E5%8A%AB%E6%8C%81%E6%8A%80%E6%9C%AF/</guid>
       <description>DLL劫持技术 1、介绍 DLL劫持技术是一种权限维持的手段， 通过劫持正常程序DLL的执行流让程序执行恶意代码。 流程 正常程序 &amp;mdash;-调用&amp;mdash;-&amp;raquo; 正常的DLL &amp;mdash;-执行&amp;mdash;&amp;raquo; 正常功能 DLL劫持就可以通过劫持正常的DLL, 让恶</description>
-    </item>
-    
-    <item>
-      <title>DLL劫持技术</title>
-      <link>http://guozhi1.github.io/dll%E5%8A%AB%E6%8C%81%E6%8A%80%E6%9C%AF/</link>
-      <pubDate>Mon, 11 Sep 2023 14:46:19 +0800</pubDate>
-      
-      <guid>http://guozhi1.github.io/dll%E5%8A%AB%E6%8C%81%E6%8A%80%E6%9C%AF/</guid>
-      <description></description>
     </item>
     
     <item>
@@ -59,6 +104,15 @@
       
       <guid>http://guozhi1.github.io/posts/tech/src%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%8C%96%E6%8E%98/</guid>
       <description>可以正常使用的功能点截取数据包，删除cookie看对业务是否能正常处理，如果处理就是未授权。 可以f12查看前端页面是否存在未授权的API接口 修改返回包</description>
+    </item>
+    
+    <item>
+      <title>X64逆向技术 笔记</title>
+      <link>http://guozhi1.github.io/posts/blog/x64%E9%80%86%E5%90%91%E6%8A%80%E6%9C%AF-%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Thu, 25 May 2023 07:47:04 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/blog/x64%E9%80%86%E5%90%91%E6%8A%80%E6%9C%AF-%E7%AC%94%E8%AE%B0/</guid>
+      <description>x64逆向技术 1. 寄存器 64位寄存大小扩展64位，数量增加8个（R8-R15）,扩充8个128位的xmm寄存器， 64位兼容32应用程序，64程序用rax, 32位程序用eax底32位， x64高位访问通过WORD byte DWORD来进行访问。 1.1 函数 栈平衡 栈的特征是先进后出，RSP是栈顶指针，</description>
     </item>
     
     <item>
@@ -131,15 +185,6 @@
       
       <guid>http://guozhi1.github.io/posts/tech/%E6%96%87%E6%9C%AC%E7%B1%BB%E5%9E%8B%E5%85%8D%E6%9D%80/</guid>
       <description>AMSI 一个反病毒接口，分析恶意代码。 位置是在C:\windows\system32\amsi.dll 安全厂商也可以通过接入Amsi进行查杀提高安全性 接入Amsi的相关厂商 AMSI的处理流程是：扫描&amp;mdash;-触发&amp;mdash;-病毒库 ASMI绕过方式 不进行绕过，的显示 PS C:\Users\32569&amp;gt; amsiutils 所在位</description>
-    </item>
-    
-    <item>
-      <title>Blog</title>
-      <link>http://guozhi1.github.io/posts/blog/blog/</link>
-      <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
-      
-      <guid>http://guozhi1.github.io/posts/blog/blog/</guid>
-      <description></description>
     </item>
     
     <item>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>代理 on 果汁天下苏&#39;s Blog</title>
+    <link>http://guozhi1.github.io/tags/%E4%BB%A3%E7%90%86/</link>
+    <description>Recent content in 代理 on 果汁天下苏&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 30 Oct 2023 09:38:50 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/tags/%E4%BB%A3%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Proxy代理编写</title>
+      <link>http://guozhi1.github.io/posts/tech/proxy%E4%BB%A3%E7%90%86%E7%BC%96%E5%86%99/</link>
+      <pubDate>Mon, 30 Oct 2023 09:38:50 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/tech/proxy%E4%BB%A3%E7%90%86%E7%BC%96%E5%86%99/</guid>
+      <description>proxy从互联网收集代理的编写 借鉴的代码SmallProxyPool 一、代码的结构 我在分析SmallProxyPool代码之后找到了几个基础的结构用这些基础的结构就可以编写一个手机互联网代理的工具 收集模块 通过Fofa搜索到互联网上的Sockt5资产 检测模块 通过检测看什么Sock</description>
+    </item>
+    
+  </channel>
+</rss>

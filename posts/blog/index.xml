@@ -6,7 +6,16 @@
     <description>Recent content in 🧱 建站 on 果汁天下苏&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 13 Jul 2023 18:13:18 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/posts/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 22 Oct 2023 19:13:37 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/posts/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Win32调试api</title>
+      <link>http://guozhi1.github.io/posts/blog/win32%E8%B0%83%E8%AF%95api/</link>
+      <pubDate>Sun, 22 Oct 2023 19:13:37 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/blog/win32%E8%B0%83%E8%AF%95api/</guid>
+      <description>Win32调试Api Win32自带了一些api函数，他们相当于调试器的大部分功能，这些函数称为Win32调试Api。 利用这些Api，可以加载一个程序或捆绑到一个正在运行的程序上以供调试。可以获得调试程序底层信息，甚至可以对被调试程序进行任意修改。 1.调试相关函数说明 BOOL ContinueDebugEvent()</description>
+    </item>
+    
     <item>
       <title>PE文件格式</title>
       <link>http://guozhi1.github.io/posts/blog/pe%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/</link>
@@ -26,6 +35,15 @@
     </item>
     
     <item>
+      <title>X64逆向技术 笔记</title>
+      <link>http://guozhi1.github.io/posts/blog/x64%E9%80%86%E5%90%91%E6%8A%80%E6%9C%AF-%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Thu, 25 May 2023 07:47:04 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/blog/x64%E9%80%86%E5%90%91%E6%8A%80%E6%9C%AF-%E7%AC%94%E8%AE%B0/</guid>
+      <description>x64逆向技术 1. 寄存器 64位寄存大小扩展64位，数量增加8个（R8-R15）,扩充8个128位的xmm寄存器， 64位兼容32应用程序，64程序用rax, 32位程序用eax底32位， x64高位访问通过WORD byte DWORD来进行访问。 1.1 函数 栈平衡 栈的特征是先进后出，RSP是栈顶指针，</description>
+    </item>
+    
+    <item>
       <title>32位逆向技术</title>
       <link>http://guozhi1.github.io/posts/blog/32%E4%BD%8D%E9%80%86%E5%90%91%E6%8A%80%E6%9C%AF/</link>
       <pubDate>Sat, 15 Apr 2023 15:02:44 +0800</pubDate>
@@ -41,15 +59,6 @@
       
       <guid>http://guozhi1.github.io/posts/blog/%E9%80%86%E5%90%91%E5%9F%BA%E7%A1%80/</guid>
       <description>调用约定 知识来源 允许使用VARARG：表示参数个数可以是不确定 约定类型 _cdecl(C类规范) pascal stdcall Fastcall 参数传递 从右到左 从左到右 从右到左 寄存器传参与栈 平衡者 调用者 子程序 子程序 子程序 允许使用VARARG 是 否 否 x86 下的调用约定 _cdecl,_stdcall,_fastcall int Test(int a,int b,int c,int d,int e) { return a + b + c + d + e; } int main() { Test(1,2,3,4,5); } _cdecl C++下的默</description>
-    </item>
-    
-    <item>
-      <title>Blog</title>
-      <link>http://guozhi1.github.io/posts/blog/blog/</link>
-      <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
-      
-      <guid>http://guozhi1.github.io/posts/blog/blog/</guid>
-      <description></description>
     </item>
     
   </channel>
