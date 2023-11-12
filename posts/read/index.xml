@@ -34,14 +34,5 @@
       <description>SMBMS代码审计 1. xss漏洞 先知社区-知识来源 这个xss在head.jsp文件的标签里，获取了请求头的Referer参数在前端显示了 可以使用payload进行闭合操作，进行闭合操作 &amp;#34;&amp;gt;&amp;lt;img src=x onerror=alert(1)&amp;gt; 这个payload在应该经过过滤器的时候就被拦截，因为jsp的本质是servlet所以是经过</description>
     </item>
     
-    <item>
-      <title>Read</title>
-      <link>http://guozhi1.github.io/posts/read/read/</link>
-      <pubDate>Thu, 05 May 2022 00:18:06 +0800</pubDate>
-      
-      <guid>http://guozhi1.github.io/posts/read/read/</guid>
-      <description></description>
-    </item>
-    
   </channel>
 </rss>

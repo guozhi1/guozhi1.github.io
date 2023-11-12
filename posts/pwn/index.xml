@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>🏖 pwn on 果汁天下苏&#39;s Blog</title>
+    <link>http://guozhi1.github.io/posts/pwn/</link>
+    <description>Recent content in 🏖 pwn on 果汁天下苏&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 02 Nov 2023 16:29:23 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/posts/pwn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pwn经典漏洞栈溢出</title>
+      <link>http://guozhi1.github.io/posts/pwn/%E6%A0%88%E6%BA%A2%E5%87%BA/</link>
+      <pubDate>Thu, 02 Nov 2023 16:29:23 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/pwn/%E6%A0%88%E6%BA%A2%E5%87%BA/</guid>
+      <description>要在Liunx 系统下跑 栈溢出 通过程序的输入但是并没做长度限制导致栈溢出，栈溢出的攻击手法通过覆盖栈的rbp下面的ret返回的地址返回到想要执行的目标地址，从而达到控制执行程序执行流。 1.1 源码 #include &amp;lt;stdio.h&amp;gt; #include &amp;lt;stdlib.h&amp;gt; #include &amp;lt;unistd.h&amp;gt; void y0u_c4n7_533_m3() { execve(&amp;#34;/bin/sh&amp;#34;, (char *[]){0}, (char *[]){0}); } int main() { char buf[16]; puts(&amp;#34;This is your first bof challenge ;)&amp;#34;); fflush(stdout); read(0, buf, 0x30); return 0; } 1.2 解法 y0u_c4n7_533_m3 是主要的目标通过</description>
+    </item>
+    
+  </channel>
+</rss>
