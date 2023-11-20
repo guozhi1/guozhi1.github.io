@@ -3,15 +3,45 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://guozhi1.github.io/posts/</loc>
-    <lastmod>2023-11-02T16:29:23+08:00</lastmod>
+    <lastmod>2023-11-16T17:06:06+08:00</lastmod>
   </url><url>
-    <loc>http://guozhi1.github.io/posts/pwn/%E6%A0%88%E6%BA%A2%E5%87%BA/</loc>
-    <lastmod>2023-11-02T16:29:23+08:00</lastmod>
+    <loc>http://guozhi1.github.io/posts/pwn/rop%E4%B8%AD%E7%BA%A7/</loc>
+    <lastmod>2023-11-16T17:06:06+08:00</lastmod>
   </url><url>
     <loc>http://guozhi1.github.io/</loc>
-    <lastmod>2023-11-02T16:29:23+08:00</lastmod>
+    <lastmod>2023-11-16T17:06:06+08:00</lastmod>
   </url><url>
     <loc>http://guozhi1.github.io/posts/pwn/</loc>
+    <lastmod>2023-11-16T17:06:06+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/posts/pwn/%E6%A0%88%E6%BA%A2%E5%87%BAret2text%E5%AF%BB%E6%89%BE%E6%BA%A2%E5%87%BA%E9%95%BF%E5%BA%A6/</loc>
+    <lastmod>2023-11-16T10:45:09+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/tags/pwn/</loc>
+    <lastmod>2023-11-15T14:59:44+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/tags/rop/</loc>
+    <lastmod>2023-11-15T14:59:44+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/posts/pwn/aaaaa/</loc>
+    <lastmod>2023-11-15T14:59:44+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/</loc>
+    <lastmod>2023-11-15T14:59:44+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/tags/%E6%A0%88%E6%BA%A2%E5%87%BA/</loc>
+    <lastmod>2023-11-15T14:59:44+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/tags/%E6%BC%8F%E6%B4%9E/</loc>
+    <lastmod>2023-11-15T14:59:44+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/tags/</loc>
+    <lastmod>2023-11-15T14:59:44+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/posts/pwn/buuctfrip%E8%A7%A3%E9%A2%98/</loc>
+    <lastmod>2023-11-13T10:20:12+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/posts/pwn/%E6%A0%88%E6%BA%A2%E5%87%BA/</loc>
     <lastmod>2023-11-02T16:29:23+08:00</lastmod>
   </url><url>
     <loc>http://guozhi1.github.io/posts/tech/</loc>
@@ -24,9 +54,6 @@
     <lastmod>2023-10-30T09:38:50+08:00</lastmod>
   </url><url>
     <loc>http://guozhi1.github.io/tags/%E4%BB%A3%E7%90%86/</loc>
-    <lastmod>2023-10-30T09:38:50+08:00</lastmod>
-  </url><url>
-    <loc>http://guozhi1.github.io/tags/</loc>
     <lastmod>2023-10-30T09:38:50+08:00</lastmod>
   </url><url>
     <loc>http://guozhi1.github.io/posts/blog/win32%E8%B0%83%E8%AF%95api/</loc>
