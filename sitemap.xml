@@ -3,27 +3,42 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://guozhi1.github.io/posts/</loc>
-    <lastmod>2023-11-16T17:06:06+08:00</lastmod>
+    <lastmod>2023-12-07T15:35:44+08:00</lastmod>
   </url><url>
-    <loc>http://guozhi1.github.io/posts/pwn/rop%E4%B8%AD%E7%BA%A7/</loc>
-    <lastmod>2023-11-16T17:06:06+08:00</lastmod>
+    <loc>http://guozhi1.github.io/tags/pwn/</loc>
+    <lastmod>2023-12-07T15:35:44+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%BC%8F%E6%B4%9E/</loc>
+    <lastmod>2023-12-07T15:35:44+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/tags/%E5%9F%BA%E7%A1%80/</loc>
+    <lastmod>2023-12-07T15:35:44+08:00</lastmod>
   </url><url>
     <loc>http://guozhi1.github.io/</loc>
-    <lastmod>2023-11-16T17:06:06+08:00</lastmod>
+    <lastmod>2023-12-07T15:35:44+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/tags/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/</loc>
+    <lastmod>2023-12-07T15:35:44+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/posts/pwn/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%9F%BA%E7%A1%80/</loc>
+    <lastmod>2023-12-07T15:35:44+08:00</lastmod>
   </url><url>
     <loc>http://guozhi1.github.io/posts/pwn/</loc>
+    <lastmod>2023-12-07T15:35:44+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/tags/</loc>
+    <lastmod>2023-12-07T15:35:44+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/posts/pwn/rop%E4%B8%AD%E7%BA%A7/</loc>
     <lastmod>2023-11-16T17:06:06+08:00</lastmod>
   </url><url>
     <loc>http://guozhi1.github.io/posts/pwn/%E6%A0%88%E6%BA%A2%E5%87%BAret2text%E5%AF%BB%E6%89%BE%E6%BA%A2%E5%87%BA%E9%95%BF%E5%BA%A6/</loc>
     <lastmod>2023-11-16T10:45:09+08:00</lastmod>
   </url><url>
-    <loc>http://guozhi1.github.io/tags/pwn/</loc>
-    <lastmod>2023-11-15T14:59:44+08:00</lastmod>
-  </url><url>
     <loc>http://guozhi1.github.io/tags/rop/</loc>
     <lastmod>2023-11-15T14:59:44+08:00</lastmod>
   </url><url>
-    <loc>http://guozhi1.github.io/posts/pwn/aaaaa/</loc>
+    <loc>http://guozhi1.github.io/posts/pwn/rop%E5%9F%BA%E7%A1%80/</loc>
     <lastmod>2023-11-15T14:59:44+08:00</lastmod>
   </url><url>
     <loc>http://guozhi1.github.io/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/</loc>
@@ -35,10 +50,13 @@
     <loc>http://guozhi1.github.io/tags/%E6%BC%8F%E6%B4%9E/</loc>
     <lastmod>2023-11-15T14:59:44+08:00</lastmod>
   </url><url>
-    <loc>http://guozhi1.github.io/tags/</loc>
-    <lastmod>2023-11-15T14:59:44+08:00</lastmod>
-  </url><url>
     <loc>http://guozhi1.github.io/posts/pwn/buuctfrip%E8%A7%A3%E9%A2%98/</loc>
+    <lastmod>2023-11-13T10:20:12+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/tags/ctf/</loc>
+    <lastmod>2023-11-13T10:20:12+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/tags/%E4%BA%8C%E7%BA%A7%E5%88%B6%E6%BC%8F%E6%B4%9E/</loc>
     <lastmod>2023-11-13T10:20:12+08:00</lastmod>
   </url><url>
     <loc>http://guozhi1.github.io/posts/pwn/%E6%A0%88%E6%BA%A2%E5%87%BA/</loc>
@@ -128,9 +146,6 @@
     <loc>http://guozhi1.github.io/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</loc>
     <lastmod>2023-05-14T16:56:09+08:00</lastmod>
   </url><url>
-    <loc>http://guozhi1.github.io/tags/%E5%9F%BA%E7%A1%80/</loc>
-    <lastmod>2023-05-14T16:56:09+08:00</lastmod>
-  </url><url>
     <loc>http://guozhi1.github.io/posts/tech/src%E6%8C%96%E6%8E%98-xss%E6%BC%8F%E6%B4%9E/</loc>
     <lastmod>2023-05-09T08:35:41+08:00</lastmod>
   </url><url>
@@ -157,6 +172,8 @@
   </url><url>
     <loc>http://guozhi1.github.io/about/</loc>
     <lastmod>2021-11-06T14:57:28+08:00</lastmod>
+  </url><url>
+    <loc>http://guozhi1.github.io/posts/pwn/buuctfbjdctf_2020_babystack%E8%A7%A3%E9%A2%98/</loc>
   </url><url>
     <loc>http://guozhi1.github.io/archives/</loc>
   </url><url>

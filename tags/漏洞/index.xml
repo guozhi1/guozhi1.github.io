@@ -9,10 +9,10 @@
     <lastBuildDate>Wed, 15 Nov 2023 14:59:44 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/tags/%E6%BC%8F%E6%B4%9E/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>ROP基础</title>
-      <link>http://guozhi1.github.io/posts/pwn/aaaaa/</link>
+      <link>http://guozhi1.github.io/posts/pwn/rop%E5%9F%BA%E7%A1%80/</link>
       <pubDate>Wed, 15 Nov 2023 14:59:44 +0800</pubDate>
       
-      <guid>http://guozhi1.github.io/posts/pwn/aaaaa/</guid>
+      <guid>http://guozhi1.github.io/posts/pwn/rop%E5%9F%BA%E7%A1%80/</guid>
       <description>如何利用栈溢出漏洞</description>
     </item>
     

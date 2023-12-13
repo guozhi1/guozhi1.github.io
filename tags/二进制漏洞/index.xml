@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>二进制漏洞 on 果汁天下苏&#39;s Blog</title>
+    <link>http://guozhi1.github.io/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%BC%8F%E6%B4%9E/</link>
+    <description>Recent content in 二进制漏洞 on 果汁天下苏&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 07 Dec 2023 15:35:44 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%BC%8F%E6%B4%9E/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>格式化字符串漏洞基础</title>
+      <link>http://guozhi1.github.io/posts/pwn/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%9F%BA%E7%A1%80/</link>
+      <pubDate>Thu, 07 Dec 2023 15:35:44 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/pwn/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%9F%BA%E7%A1%80/</guid>
+      <description>格式化字符串漏洞 格式化字符串漏洞是发现比较晚的漏洞，产生的原因是因为 ，格式化函数把用户输入的格式化字符，当做了解析自身的格式化字符做了解析。 常见的格式化漏洞函数 各种print函数 格式化字符 %s 打印字符串 %p 打印地址 %c 打印char字符 %n 输入字符 %10c 这代表10个制表符（空格） printf(&amp;#34;guozhi%10s&amp;#34;, &amp;#34;格</description>
+    </item>
+    
+  </channel>
+</rss>

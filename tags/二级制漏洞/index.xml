@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>栈溢出 on 果汁天下苏&#39;s Blog</title>
-    <link>http://guozhi1.github.io/tags/%E6%A0%88%E6%BA%A2%E5%87%BA/</link>
-    <description>Recent content in 栈溢出 on 果汁天下苏&#39;s Blog</description>
+    <title>二级制漏洞 on 果汁天下苏&#39;s Blog</title>
+    <link>http://guozhi1.github.io/tags/%E4%BA%8C%E7%BA%A7%E5%88%B6%E6%BC%8F%E6%B4%9E/</link>
+    <description>Recent content in 二级制漏洞 on 果汁天下苏&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 15 Nov 2023 14:59:44 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/tags/%E6%A0%88%E6%BA%A2%E5%87%BA/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>ROP基础</title>
-      <link>http://guozhi1.github.io/posts/pwn/rop%E5%9F%BA%E7%A1%80/</link>
-      <pubDate>Wed, 15 Nov 2023 14:59:44 +0800</pubDate>
-      
-      <guid>http://guozhi1.github.io/posts/pwn/rop%E5%9F%BA%E7%A1%80/</guid>
-      <description>如何利用栈溢出漏洞</description>
-    </item>
-    
+    <lastBuildDate>Mon, 13 Nov 2023 10:20:12 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/tags/%E4%BA%8C%E7%BA%A7%E5%88%B6%E6%BC%8F%E6%B4%9E/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>[BUUCTF]rip栈溢出解题</title>
       <link>http://guozhi1.github.io/posts/pwn/buuctfrip%E8%A7%A3%E9%A2%98/</link>
@@ -23,15 +14,6 @@
       
       <guid>http://guozhi1.github.io/posts/pwn/buuctfrip%E8%A7%A3%E9%A2%98/</guid>
       <description>1.1 分析源码 先看下保护措施 [*] &amp;#39;/home/guozhi/桌面/pwn1&amp;#39; Arch: amd64-64-little RELRO: Partial RELRO GOT表写保护 Stack: No canary found 无金丝雀保护 NX: NX unknown - GNU_STACK missing 内存页 无不可执行保护 PIE: No PIE (0x400000) 无地址随机化 Stack: Executable 栈可执行 RWX: Has RWX segments 有可读可写可执行 int __cdecl main(int argc, const char **argv, const char **envp) { char s[15]; // [rsp+1h] [rbp-Fh] BYREF puts(&amp;#34;please input&amp;#34;); gets((__int64)s, (__int64)argv); //主要是这里产生了</description>
-    </item>
-    
-    <item>
-      <title>Pwn经典漏洞栈溢出</title>
-      <link>http://guozhi1.github.io/posts/pwn/%E6%A0%88%E6%BA%A2%E5%87%BA/</link>
-      <pubDate>Thu, 02 Nov 2023 16:29:23 +0800</pubDate>
-      
-      <guid>http://guozhi1.github.io/posts/pwn/%E6%A0%88%E6%BA%A2%E5%87%BA/</guid>
-      <description>基础栈溢出</description>
     </item>
     
   </channel>
