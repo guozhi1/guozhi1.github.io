@@ -6,7 +6,16 @@
     <description>Recent content in 🏖 pwn on 果汁天下苏&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 07 Dec 2023 15:35:44 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/posts/pwn/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 19 Dec 2023 16:53:19 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/posts/pwn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Ret2libc3</title>
+      <link>http://guozhi1.github.io/posts/pwn/ret2libc3/</link>
+      <pubDate>Tue, 19 Dec 2023 16:53:19 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/pwn/ret2libc3/</guid>
+      <description>打libc题的时候记得使用Ubuntu 16, 使用Ubuntu 20死活打不出来！！！</description>
+    </item>
+    
     <item>
       <title>格式化字符串漏洞基础</title>
       <link>http://guozhi1.github.io/posts/pwn/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%9F%BA%E7%A1%80/</link>
