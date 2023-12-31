@@ -6,7 +6,16 @@
     <description>Recent content in ctf on 果汁天下苏&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 13 Nov 2023 10:20:12 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/tags/ctf/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 19 Dec 2023 16:53:19 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/tags/ctf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Ret2libc3</title>
+      <link>http://guozhi1.github.io/posts/pwn/ret2libc3/</link>
+      <pubDate>Tue, 19 Dec 2023 16:53:19 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/pwn/ret2libc3/</guid>
+      <description>打libc题的时候记得使用Ubuntu 16, 使用Ubuntu 20死活打不出来！！！</description>
+    </item>
+    
     <item>
       <title>[BUUCTF]rip栈溢出解题</title>
       <link>http://guozhi1.github.io/posts/pwn/buuctfrip%E8%A7%A3%E9%A2%98/</link>

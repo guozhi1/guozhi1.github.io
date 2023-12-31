@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>libc on 果汁天下苏&#39;s Blog</title>
+    <link>http://guozhi1.github.io/tags/libc/</link>
+    <description>Recent content in libc on 果汁天下苏&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 19 Dec 2023 16:53:19 +0800</lastBuildDate><atom:link href="http://guozhi1.github.io/tags/libc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Ret2libc3</title>
+      <link>http://guozhi1.github.io/posts/pwn/ret2libc3/</link>
+      <pubDate>Tue, 19 Dec 2023 16:53:19 +0800</pubDate>
+      
+      <guid>http://guozhi1.github.io/posts/pwn/ret2libc3/</guid>
+      <description>打libc题的时候记得使用Ubuntu 16, 使用Ubuntu 20死活打不出来！！！</description>
+    </item>
+    
+  </channel>
+</rss>
